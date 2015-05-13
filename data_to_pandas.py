@@ -18,11 +18,12 @@ data_frames['indonesia-openoil-contracts']['country'] = 'Indonesia'
 MAPPINGS = OrderedDict()
 MAPPINGS['indonesia-eiti-projects'] = {
         'commodity_type': 'commodity',
+        'project_name_concession_layer': 'project_name',
     }
 MAPPINGS['indonesia-mining-licenses'] = {
         'komoditas / commodity?': 'commodity',
         'tahun': 'year',
-        'nama_perusahaan / company name': 'company_name'
+        'nama_perusahaan / company name': 'company_name',
     }
 MAPPINGS['usgs'] = {
         'op_comp': 'company_name',

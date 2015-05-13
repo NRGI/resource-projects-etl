@@ -3,3 +3,4 @@ data
 *.swp
 *~
 .ve
+.ipynb_checkpoints
