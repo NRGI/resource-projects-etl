@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-mkdir data
+mkdir -p data
 cd data
 wget "http://mrdata.usgs.gov/mineral-operations/minfac-csv.zip"
 unzip minfac-csv.zip
@@ -18,3 +18,4 @@ cd ../../
 
 mkdir -p data/drc
 cd data/drc
+wget "https://docs.google.com/spreadsheets/d/1nnCeutWYNVugb8Tgl7gdItJWL9PBE6XWttXnhv3Shgk/export?format=xlsx" -O 2-rp.org-sources.xlsx

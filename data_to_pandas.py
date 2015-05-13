@@ -15,6 +15,10 @@ data_frames['indonesia-openoil-concessions']['country'] = 'Indonesia'
 data_frames['indonesia-openoil-contracts'] = pd.read_csv('data/indonesia/4-openoil-contracts-indonesia.csv')
 data_frames['indonesia-openoil-contracts']['country'] = 'Indonesia'
 
+data_frames['rp.org-sources'] = pd.read_excel('data/drc/2-rp.org-sources.xlsx', sheetname='Congomines DRC concession data')
+data_frames['rp.org-sources']['country'] = 'Congo - Kinshasa' # Congo - Kinshasa and Congo - Brazzaville are present in the USGS sheet
+
+
 MAPPINGS = OrderedDict()
 MAPPINGS['indonesia-eiti-projects'] = {
         'commodity_type': 'commodity',
@@ -36,6 +40,13 @@ MAPPINGS['indonesia-openoil-concessions'] = {
 MAPPINGS['indonesia-openoil-contracts'] = {
         'contractor': 'company_name',
     }
+    
+MAPPINGS['rp.org-sources'] = {
+        'statut': 'status',
+        #'localisation': 'location' # This is not an exact mapping
+        #'province': 'location' # This is not an exact mapping
+    }   
+
 
 for key, df in data_frames.items():
     df['source'] = key
