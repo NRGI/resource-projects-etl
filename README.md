@@ -1,5 +1,5 @@
 # resource-projects-etl
-ETL processes for rp.org
+Extract, Transform and Load processes for rp.org
 
 # Requirements
 
@@ -10,5 +10,5 @@ Python 3
 ```
 virtualenv .ve --python=/usr/bin/python3
 source .ve/bin/activate
-pip install requirements.txt
+pip install -r requirements.txt
 ```
