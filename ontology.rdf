@@ -151,6 +151,12 @@
     
 
 
+    <!-- http://resourceprojects.org/def/Contract -->
+
+    <owl:Class rdf:about="http://resourceprojects.org/def/Contract"/>
+    
+
+
     <!-- http://resourceprojects.org/def/License -->
 
     <owl:Class rdf:about="http://resourceprojects.org/def/License"/>
