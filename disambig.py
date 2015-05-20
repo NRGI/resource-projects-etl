@@ -11,7 +11,7 @@ from requests.auth import HTTPDigestAuth
 import os
 
 
-base_uri = 'http://bjwebb.pagekite.me/'
+base_uri = 'http://virtuoso.nrgi-dev.default.opendataservices.uk0.bigv.io/'
  
 
 def escape(s):

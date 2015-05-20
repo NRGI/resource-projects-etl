@@ -7,7 +7,7 @@ from rdflib.namespace import FOAF, RDF
 combined_df = pd.concat(data_frames)
 
 
-base_uri = 'http://bjwebb.pagekite.me/'
+base_uri = 'http://virtuoso.nrgi-dev.default.opendataservices.uk0.bigv.io/'
 
 
 g = Graph()
