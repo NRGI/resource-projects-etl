@@ -11,7 +11,7 @@ from requests.auth import HTTPDigestAuth
 import os
 
 
-base_uri = 'http://virtuoso.nrgi-dev.default.opendataservices.uk0.bigv.io/'
+base_uri = 'http://resourceprojects.org/'
  
 
 def escape(s):
@@ -29,7 +29,7 @@ def escape(s):
     return '"' + s + '"'
 
 
-def sparql_query(query, default_graph_uri=base_uri + 'tmp'):
+def sparql_query(query, default_graph_uri=base_uri):
     r = requests.post('http://localhost:8890/sparql-auth',
         auth=HTTPDigestAuth('dba', os.environ['DBA_PASS']),
         data={
@@ -46,9 +46,11 @@ def sparql_query(query, default_graph_uri=base_uri + 'tmp'):
 
 def disambig_projects():
     query = """
+        DEFINE input:same-as "yes"
+
         select ?name (count(?s) as ?projects) where {
-            ?s rdf:type <""" + base_uri + """t/project> .
-            ?s foaf:name ?name .
+            ?s a <""" + base_uri + """def/Project> .
+            ?s skos:prefLabel ?name .
         }
         group by (?name)
         having (count(?s) > 1)
@@ -60,7 +62,7 @@ def disambig_projects():
 def disambig_project_by_name(name):
     query = """
         select ?s where {
-            ?s foaf:name """ + escape(name) + """ .
+            ?s skos:prefLabel """ + escape(name) + """ .
         }
     """
     results = sparql_query(query)['results']['bindings']
@@ -73,7 +75,7 @@ def disambig_project_by_name(name):
                 """ + triple + """
             }
         """
-        sparql_query(input_query, default_graph_uri=base_uri + 'tmp')
+        sparql_query(input_query, default_graph_uri=base_uri)
 
 
 if __name__ == '__main__':
