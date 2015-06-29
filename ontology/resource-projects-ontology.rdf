@@ -1,0 +1,613 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<rdf:RDF xmlns="http://resourceprojects.org/def/"
+     xml:base="http://resourceprojects.org/def/"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <owl:Ontology rdf:about="http://resourceprojects.org/def/"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://resourceprojects.org/def/hasLocation -->
+
+    <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/hasLocation">
+        <rdfs:range rdf:resource="http://resourceprojects.org/def/Country"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/License"/>
+        <rdfs:range rdf:resource="http://resourceprojects.org/def/Location"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Organization"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Project"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Site"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://resourceprojects.org/def/hasStake -->
+
+    <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/hasStake">
+        <rdfs:range rdf:resource="http://resourceprojects.org/def/Stake"/>
+        <rdfs:subPropertyOf rdf:resource="http://resourceprojects.org/def/stake"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://resourceprojects.org/def/hasStakeholder -->
+
+    <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/hasStakeholder">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Stake"/>
+        <rdfs:subPropertyOf rdf:resource="http://resourceprojects.org/def/stake"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://resourceprojects.org/def/hasStakeholding -->
+
+    <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/hasStakeholding">
+        <rdfs:range rdf:resource="http://resourceprojects.org/def/Stake"/>
+        <owl:inverseOf rdf:resource="http://resourceprojects.org/def/hasStakeholder"/>
+        <rdfs:subPropertyOf rdf:resource="http://resourceprojects.org/def/stakeholding"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://resourceprojects.org/def/isStakeIn -->
+
+    <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/isStakeIn">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Stake"/>
+        <owl:inverseOf rdf:resource="http://resourceprojects.org/def/hasStake"/>
+        <rdfs:subPropertyOf rdf:resource="http://resourceprojects.org/def/stakeholding"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://resourceprojects.org/def/payee -->
+
+    <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/payee"/>
+    
+
+
+    <!-- http://resourceprojects.org/def/payer -->
+
+    <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/payer"/>
+    
+
+
+    <!-- http://resourceprojects.org/def/productionStatistics -->
+
+    <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/productionStatistics"/>
+    
+
+
+    <!-- http://resourceprojects.org/def/relatedProject -->
+
+    <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/relatedProject"/>
+    
+
+
+    <!-- http://resourceprojects.org/def/stake -->
+
+    <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/stake">
+        <rdf:type rdf:resource="&owl;TransitiveProperty"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://resourceprojects.org/def/stakeholding -->
+
+    <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/stakeholding">
+        <rdf:type rdf:resource="&owl;TransitiveProperty"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://purl.org/dc/elements/1.1/title -->
+
+    <owl:DatatypeProperty rdf:about="http://purl.org/dc/elements/1.1/title">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Commodity"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Company"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/License"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Location"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Organization"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Project"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://resourceprojects.org/def/currency -->
+
+    <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/currency">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/CompanyPayment"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/GovernmentReceipt"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Transaction"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://resourceprojects.org/def/date -->
+
+    <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/date">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/CompanyPayment"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/GovernmentReceipt"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Transaction"/>
+        <rdfs:range rdf:resource="&xsd;dateTime"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://resourceprojects.org/def/endDate -->
+
+    <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/endDate">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Company"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Contract"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/License"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Organization"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Project"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Site"/>
+        <rdfs:subPropertyOf rdf:resource="http://resourceprojects.org/def/date"/>
+        <rdfs:range rdf:resource="&xsd;dateTime"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://resourceprojects.org/def/identifier -->
+
+    <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/identifier">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Company"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Organization"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://resourceprojects.org/def/isOperator -->
+
+    <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/isOperator">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Stake"/>
+        <rdfs:range rdf:resource="&xsd;boolean"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://resourceprojects.org/def/licenseType -->
+
+    <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/licenseType">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/License"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://resourceprojects.org/def/paymentType -->
+
+    <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/paymentType">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/CompanyPayment"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/GovernmentReceipt"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Transaction"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://resourceprojects.org/def/priceUnit -->
+
+    <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/priceUnit">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Production"/>
+        <rdfs:subPropertyOf rdf:resource="&owl;topDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://resourceprojects.org/def/share -->
+
+    <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/share">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Stake"/>
+        <rdfs:range rdf:resource="&xsd;float"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://resourceprojects.org/def/signatureDate -->
+
+    <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/signatureDate">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Contract"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/License"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Project"/>
+        <rdfs:subPropertyOf rdf:resource="http://resourceprojects.org/def/date"/>
+        <rdfs:range rdf:resource="&xsd;dateTime"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://resourceprojects.org/def/source -->
+
+    <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/source">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Commodity"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Company"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Contract"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Country"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/GovernmentParty"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/License"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Location"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Organization"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Project"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Site"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://resourceprojects.org/def/sourceDate -->
+
+    <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/sourceDate">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Commodity"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Company"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Contract"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Country"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/License"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Location"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Organization"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Project"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Site"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Stake"/>
+        <rdfs:subPropertyOf rdf:resource="http://resourceprojects.org/def/date"/>
+        <rdfs:range rdf:resource="&xsd;dateTime"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://resourceprojects.org/def/startDate -->
+
+    <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/startDate">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Company"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Contract"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/License"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Organization"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Project"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Site"/>
+        <rdfs:subPropertyOf rdf:resource="http://resourceprojects.org/def/date"/>
+        <rdfs:range rdf:resource="&xsd;dateTime"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://resourceprojects.org/def/trueAt -->
+
+    <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/trueAt">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Commodity"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Company"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Contract"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Country"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/License"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Location"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Organization"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Project"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Site"/>
+        <rdfs:subPropertyOf rdf:resource="http://resourceprojects.org/def/date"/>
+        <rdfs:range rdf:resource="&xsd;dateTime"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://resourceprojects.org/def/unit -->
+
+    <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/unit">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Production"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://resourceprojects.org/def/value -->
+
+    <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/value">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/CompanyPayment"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/GovernmentReceipt"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Transaction"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://resourceprojects.org/def/volume -->
+
+    <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/volume">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Production"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://resourceprojects.org/def/year -->
+
+    <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/year">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Production"/>
+        <rdfs:subPropertyOf rdf:resource="http://resourceprojects.org/def/date"/>
+        <rdfs:range rdf:resource="&xsd;integer"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://resourceprojects.org/def/CEO -->
+
+    <owl:Class rdf:about="http://resourceprojects.org/def/CEO">
+        <rdfs:subClassOf rdf:resource="http://resourceprojects.org/def/Person"/>
+    </owl:Class>
+    
+
+
+    <!-- http://resourceprojects.org/def/Commodity -->
+
+    <owl:Class rdf:about="http://resourceprojects.org/def/Commodity"/>
+    
+
+
+    <!-- http://resourceprojects.org/def/Company -->
+
+    <owl:Class rdf:about="http://resourceprojects.org/def/Company">
+        <rdfs:subClassOf rdf:resource="http://resourceprojects.org/def/Organization"/>
+    </owl:Class>
+    
+
+
+    <!-- http://resourceprojects.org/def/CompanyPayment -->
+
+    <owl:Class rdf:about="http://resourceprojects.org/def/CompanyPayment">
+        <rdfs:subClassOf rdf:resource="http://resourceprojects.org/def/Transaction"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/relatedProject"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Project"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/payee"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/GovernmentParty"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/payee"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Country"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/payer"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Company"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://resourceprojects.org/def/Contract -->
+
+    <owl:Class rdf:about="http://resourceprojects.org/def/Contract">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasStake"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Stake"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://resourceprojects.org/def/Country -->
+
+    <owl:Class rdf:about="http://resourceprojects.org/def/Country"/>
+    
+
+
+    <!-- http://resourceprojects.org/def/GovernmentParty -->
+
+    <owl:Class rdf:about="http://resourceprojects.org/def/GovernmentParty">
+        <rdfs:subClassOf rdf:resource="http://resourceprojects.org/def/Organization"/>
+    </owl:Class>
+    
+
+
+    <!-- http://resourceprojects.org/def/GovernmentReceipt -->
+
+    <owl:Class rdf:about="http://resourceprojects.org/def/GovernmentReceipt">
+        <rdfs:subClassOf rdf:resource="http://resourceprojects.org/def/Transaction"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/payer"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Company"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/relatedProject"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Project"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/payee"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/GovernmentParty"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/payee"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Country"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://resourceprojects.org/def/License -->
+
+    <owl:Class rdf:about="http://resourceprojects.org/def/License">
+        <rdfs:subClassOf rdf:resource="http://resourceprojects.org/def/Contract"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasLocation"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Location"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://resourceprojects.org/def/Location -->
+
+    <owl:Class rdf:about="http://resourceprojects.org/def/Location"/>
+    
+
+
+    <!-- http://resourceprojects.org/def/Organization -->
+
+    <owl:Class rdf:about="http://resourceprojects.org/def/Organization"/>
+    
+
+
+    <!-- http://resourceprojects.org/def/Person -->
+
+    <owl:Class rdf:about="http://resourceprojects.org/def/Person"/>
+    
+
+
+    <!-- http://resourceprojects.org/def/Production -->
+
+    <owl:Class rdf:about="http://resourceprojects.org/def/Production">
+        <rdfs:subClassOf rdf:resource="http://resourceprojects.org/def/Statistics"/>
+    </owl:Class>
+    
+
+
+    <!-- http://resourceprojects.org/def/Project -->
+
+    <owl:Class rdf:about="http://resourceprojects.org/def/Project">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasLocation"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Country"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/productionStatistics"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Production"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasLocation"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Location"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasStake"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Stake"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://resourceprojects.org/def/Site -->
+
+    <owl:Class rdf:about="http://resourceprojects.org/def/Site">
+        <rdfs:comment>Areas where resource exploration or extraction take place may be divided up into a number of distinct sites, often called &apos;Blocks&apos;. </rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://resourceprojects.org/def/Stake -->
+
+    <owl:Class rdf:about="http://resourceprojects.org/def/Stake">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/isStakeIn"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Project"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasStakeholder"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Organization"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/isStakeIn"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Contract"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/isStakeIn"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Site"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/isStakeIn"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/License"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:comment xml:lang="en">A stakeholding represents certain interests of the Stakeholder in the object of the Stake. 
+
+A stake may relate to a company, project, license or contract. </rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://resourceprojects.org/def/Statistics -->
+
+    <owl:Class rdf:about="http://resourceprojects.org/def/Statistics"/>
+    
+
+
+    <!-- http://resourceprojects.org/def/Transaction -->
+
+    <owl:Class rdf:about="http://resourceprojects.org/def/Transaction"/>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net -->
+

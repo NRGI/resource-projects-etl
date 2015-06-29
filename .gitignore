@@ -4,3 +4,4 @@ data
 *~
 .ve
 .ipynb_checkpoints
+process/*/data
