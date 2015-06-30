@@ -143,12 +143,15 @@ class TagLifter:
         else: # We had nothing to work with, so just general a UUID
             return country + "/" + uuid64.hex()
         
-        cache_key = country + entity_type + self.clean_string(row[path])
+        cache_key = entity_type + self.clean_string(row[path])
         if cache_key in self.id_cache.keys() and len(self.clean_string(row[path]).strip()) > 1:
             return self.id_cache[cache_key]
 
         if entity_type == "project":
             identifier = country + "/" + self.generate_project_identifier(row[path])
+        if entity_type == "company":
+            identifier = uuid64.hex()
+
         elif entity_type == "country":
             identifier = self.get_country(row,path)
         else:
