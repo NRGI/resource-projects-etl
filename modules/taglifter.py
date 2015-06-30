@@ -227,7 +227,7 @@ class TagLifter:
         
         We build a cache of known entities in entity_cache identified by their path
         """
-        if self.limit_rows: # During testing we may wish to only run against a limited number of rows
+        if hasattr(self, 'limit_rows'): # During testing we may wish to only run against a limited number of rows
             data = self.map[0:self.limit_rows]
         else:
             data = self.map
