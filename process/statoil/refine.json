@@ -176,5 +176,42 @@
     "onError": "keep-original",
     "repeat": false,
     "repeatCount": 10
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column #project+payment+type to #project+companyPayment+type",
+    "oldColumnName": "#project+payment+type",
+    "newColumnName": "#project+companyPayment+type"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column #project+payment+currency to #project+companyPayment+currency",
+    "oldColumnName": "#project+payment+currency",
+    "newColumnName": "#project+companyPayment+currency"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column #project+payment+value to #project+companyPayment+value",
+    "oldColumnName": "#project+payment+value",
+    "newColumnName": "#project+companyPayment+value"
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column #Country using expression value.toTitlecase()",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "#Country",
+    "expression": "value.toTitlecase()",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column #Country to #country",
+    "oldColumnName": "#Country",
+    "newColumnName": "#country"
   }
 ]

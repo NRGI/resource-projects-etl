@@ -16,3 +16,7 @@ Data has been scraped by NRGI from the StatOil reports and is available at https
 
 (5) Run transform.py
 
+The output should be placed into /data/statoil-2014-payments.ttl
+
+
+
