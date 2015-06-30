@@ -226,5 +226,18 @@
     "onError": "keep-original",
     "repeat": false,
     "repeatCount": 10
+  },
+  {
+    "op": "core/column-addition",
+    "description": "Create column #project+companyPayment+year at index 4 based on column #project+company+isOperator using expression grel:2014",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "newColumnName": "#project+companyPayment+year",
+    "columnInsertIndex": 4,
+    "baseColumnName": "#project+company+isOperator",
+    "expression": "grel:2014",
+    "onError": "set-to-blank"
   }
 ]
