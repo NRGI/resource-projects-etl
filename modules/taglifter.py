@@ -430,7 +430,11 @@ class TagLifter:
                 }
               }"""%(source_class)
               rels = []
-              q = self.onto.query(query)
+              if query in self.onto_query_cache:
+                  q = self.onto_query_cache[query]
+              else:
+                  q = self.onto.query(query)
+                  self.onto_query_cache[query] = q
               for res in q:
                   t1 = str(res['t1']).split("/")[-1]
                   if not t1 in rels:
@@ -551,7 +555,11 @@ class TagLifter:
             }"""%(source_class,target_class)
                 
             relationships = {"direct":[],"indirect":[]}
-            q = self.onto.query(query)
+            if query in self.onto_query_cache:
+                q = self.onto_query_cache[query]
+            else:
+                q = self.onto.query(query)
+                self.onto_query_cache[query] = q
             for res in q:
                 if res['t1'] == target_class:
                     relationships['direct'].append(res['p1'])
@@ -614,6 +622,7 @@ class TagLifter:
         self.graph = Graph()
         self.graph.bind("skos", SKOS)
         self.graph.bind("prov", PROV)
+        self.onto_query_cache = {}
         if ontology:
             self.load_ontology(ontology)
         if source:
