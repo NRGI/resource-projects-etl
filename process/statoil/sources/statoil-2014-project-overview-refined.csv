@@ -1,21 +1,21 @@
 #country,#project,#project+company,#project+company+isOperator,#project+companyPayment+type,#project+companyPayment+currency,#project+companyPayment+value
 Norway,Statoil Petroleum AS,StatOil,Y,Taxes,NOK,8.86348E10
 Norway,Statoil Petroleum AS,StatOil,Y,Total,NOK,8.86348E10
-Angola,Block 15,StatOil,N,Host government entitlements,NOK,9.1875E9
-Angola,Block 15,StatOil,N,Host government entitlements,MMBOE,14000000
-Angola,Block 15,StatOil,N,Total,NOK,9.1875E9
-Angola,Block 17,StatOil,N,Host government entitlements,NOK,8.455E9
-Angola,Block 17,StatOil,N,Host government entitlements,MMBOE,1.43E7
-Angola,Block 17,StatOil,N,Total,NOK,8.455E9
-Azerbaijan,ACG,StatOil,N,Host government entitlements,NOK,8.2444E9
-Azerbaijan,ACG,StatOil,N,Host government entitlements,MMBOE,1.27E7
-Azerbaijan,ACG,StatOil,N,Total,NOK,8.2444E9
+Angola,Block 15,StatOil,,Host government entitlements,NOK,9.1875E9
+Angola,Block 15,StatOil,,Host government entitlements,MMBOE,14000000
+Angola,Block 15,StatOil,,Total,NOK,9.1875E9
+Angola,Block 17,StatOil,,Host government entitlements,NOK,8.455E9
+Angola,Block 17,StatOil,,Host government entitlements,MMBOE,1.43E7
+Angola,Block 17,StatOil,,Total,NOK,8.455E9
+Azerbaijan,ACG,StatOil,,Host government entitlements,NOK,8.2444E9
+Azerbaijan,ACG,StatOil,,Host government entitlements,MMBOE,1.27E7
+Azerbaijan,ACG,StatOil,,Total,NOK,8.2444E9
 Nigeria,Statoil Nigeria Ltd,StatOil,Y,Taxes,NOK,2.948E9
 Nigeria,Statoil Nigeria Ltd,StatOil,Y,Total,NOK,2.948E9
-Nigeria,Agbami,StatOil,N,Fees,NOK,360000000
-Nigeria,Agbami,StatOil,N,Host government entitlements,NOK,1.8734E9
-Nigeria,Agbami,StatOil,N,Host government entitlements,MMBOE,3000000
-Nigeria,Agbami,StatOil,N,Total,NOK,2.2334E9
+Nigeria,Agbami,StatOil,,Fees,NOK,360000000
+Nigeria,Agbami,StatOil,,Host government entitlements,NOK,1.8734E9
+Nigeria,Agbami,StatOil,,Host government entitlements,MMBOE,3000000
+Nigeria,Agbami,StatOil,,Total,NOK,2.2334E9
 Algeria,In Salah,StatOil,Joint,Host government entitlements,NOK,2.2282E9
 Algeria,In Salah,StatOil,Joint,Host government entitlements,MMBOE,6500000.0
 Algeria,In Salah,StatOil,Joint,Total,NOK,2.2282E9
@@ -35,39 +35,39 @@ Angola,Statoil Angola Block 31 AS,StatOil,Y,Taxes,NOK,8.008E8
 Angola,Statoil Angola Block 31 AS,StatOil,Y,Total,NOK,8.008E8
 Angola,Statoil Angola Block 15 AS,StatOil,Y,Taxes,NOK,743000000
 Angola,Statoil Angola Block 15 AS,StatOil,Y,Total,NOK,743000000
-Russia,Kharyaga,StatOil,N,Host government entitlements,NOK,7.289E8
-Russia,Kharyaga,StatOil,N,Host government entitlements,MMBOE,1200000.0
-Russia,Kharyaga,StatOil,N,Total,NOK,7.289E8
-Azerbaijan,Statoil Shah Deniz AS,StatOil,N,Taxes,NOK,6.855E8
-Azerbaijan,Statoil Shah Deniz AS,StatOil,N,Total,NOK,6.855E8
-Algeria,Statoil North Africa Gas AS,StatOil,N,Taxes,NOK,6.143E8
-Algeria,Statoil North Africa Gas AS,StatOil,N,Fees,NOK,400000.0
-Algeria,Statoil North Africa Gas AS,StatOil,N,Total,NOK,6.147E8
-Azerbaijan,Statoil Apsheron AS,StatOil,N,Taxes,NOK,6.031E8
-Azerbaijan,Statoil Apsheron AS,StatOil,N,Total,NOK,6.031E8
-Azerbaijan,Shah Deniz,StatOil,N,Host government entitlements,NOK,5.331E8
-Azerbaijan,Shah Deniz,StatOil,N,Host government entitlements,MMBOE,1600000.0
-Azerbaijan,Shah Deniz,StatOil,N,Total,NOK,5.331E8
-Angola,Block 31,StatOil,N,Host government entitlements,NOK,4.112E8
-Angola,Block 31,StatOil,N,Host government entitlements,MMBOE,700000.0
-Angola,Block 31,StatOil,N,Total,NOK,4.112E8
-Canada,Hibernia,StatOil,N - incor JV,Royalties,NOK,3.358E8
-Canada,Hibernia,StatOil,N - incor JV,Total,NOK,3.358E8
-Usa,Tahiti,StatOil,N - incor JV,Royalties,NOK,3.315E8
-Usa,Tahiti,StatOil,N - incor JV,Total,NOK,3.315E8
-Nigeria,Statoil Nigeria AS,StatOil,N - incor JV,Taxes,NOK,3.212E8
-Nigeria,Statoil Nigeria AS,StatOil,N - incor JV,Total,NOK,3.212E8
-Canada,Terra Nova,StatOil,N,Royalties,NOK,3.024E8
-Canada,Terra Nova,StatOil,N,Total,NOK,3.024E8
-Iran,Statoil Iran AS,StatOil,N,Taxes,NOK,2.989E8
-Iran,Statoil Iran AS,StatOil,N,Total,NOK,2.989E8
-Libya,Murzuq,StatOil,N,Host government entitlements,NOK,2.694E8
-Libya,Murzuq,StatOil,N,Host government entitlements,MMBOE,400000.0
-Libya,Murzuq,StatOil,N,Total,NOK,2.694E8
-Norway,Licences East,StatOil,N,Fees,NOK,246000000
-Norway,Licences East,StatOil,N,Total,NOK,246000000
-Libya,Statoil Murzuq AS,StatOil,N,Taxes,NOK,230.2 -
-Libya,Statoil Murzuq AS,StatOil,N,Total,NOK,2.302E8
+Russia,Kharyaga,StatOil,,Host government entitlements,NOK,7.289E8
+Russia,Kharyaga,StatOil,,Host government entitlements,MMBOE,1200000.0
+Russia,Kharyaga,StatOil,,Total,NOK,7.289E8
+Azerbaijan,Statoil Shah Deniz AS,StatOil,,Taxes,NOK,6.855E8
+Azerbaijan,Statoil Shah Deniz AS,StatOil,,Total,NOK,6.855E8
+Algeria,Statoil North Africa Gas AS,StatOil,,Taxes,NOK,6.143E8
+Algeria,Statoil North Africa Gas AS,StatOil,,Fees,NOK,400000.0
+Algeria,Statoil North Africa Gas AS,StatOil,,Total,NOK,6.147E8
+Azerbaijan,Statoil Apsheron AS,StatOil,,Taxes,NOK,6.031E8
+Azerbaijan,Statoil Apsheron AS,StatOil,,Total,NOK,6.031E8
+Azerbaijan,Shah Deniz,StatOil,,Host government entitlements,NOK,5.331E8
+Azerbaijan,Shah Deniz,StatOil,,Host government entitlements,MMBOE,1600000.0
+Azerbaijan,Shah Deniz,StatOil,,Total,NOK,5.331E8
+Angola,Block 31,StatOil,,Host government entitlements,NOK,4.112E8
+Angola,Block 31,StatOil,,Host government entitlements,MMBOE,700000.0
+Angola,Block 31,StatOil,,Total,NOK,4.112E8
+Canada,Hibernia,StatOil, - incor JV,Royalties,NOK,3.358E8
+Canada,Hibernia,StatOil, - incor JV,Total,NOK,3.358E8
+Usa,Tahiti,StatOil, - incor JV,Royalties,NOK,3.315E8
+Usa,Tahiti,StatOil, - incor JV,Total,NOK,3.315E8
+Nigeria,Statoil Nigeria AS,StatOil, - incor JV,Taxes,NOK,3.212E8
+Nigeria,Statoil Nigeria AS,StatOil, - incor JV,Total,NOK,3.212E8
+Canada,Terra Nova,StatOil,,Royalties,NOK,3.024E8
+Canada,Terra Nova,StatOil,,Total,NOK,3.024E8
+Iran,Statoil Iran AS,StatOil,,Taxes,NOK,2.989E8
+Iran,Statoil Iran AS,StatOil,,Total,NOK,2.989E8
+Libya,Murzuq,StatOil,,Host government entitlements,NOK,2.694E8
+Libya,Murzuq,StatOil,,Host government entitlements,MMBOE,400000.0
+Libya,Murzuq,StatOil,,Total,NOK,2.694E8
+Norway,Licences East,StatOil,,Fees,NOK,246000000
+Norway,Licences East,StatOil,,Total,NOK,246000000
+Libya,Statoil Murzuq AS,StatOil,,Taxes,NOK,230.2 -
+Libya,Statoil Murzuq AS,StatOil,,Total,NOK,2.302E8
 Usa,Bakken,StatOil,Varies,Taxes,NOK,3.46E7
 Usa,Bakken,StatOil,Varies,Royalties,NOK,1.914E8
 Usa,Bakken,StatOil,Varies,Fees,NOK,700000.0

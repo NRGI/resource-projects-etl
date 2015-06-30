@@ -213,5 +213,18 @@
     "description": "Rename column #Country to #country",
     "oldColumnName": "#Country",
     "newColumnName": "#country"
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column #project+company+isOperator using expression grel:replace(value,\"N\",\"\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "#project+company+isOperator",
+    "expression": "grel:replace(value,\"N\",\"\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
   }
 ]
