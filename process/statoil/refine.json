@@ -1,0 +1,180 @@
+[
+  {
+    "op": "core/column-move",
+    "description": "Move column Country to position 0",
+    "columnName": "Country",
+    "index": 0
+  },
+  {
+    "op": "core/transpose-columns-into-rows",
+    "description": "Transpose cells in columns starting with Taxes into rows in two new columns named Type and Value",
+    "startColumnName": "Taxes",
+    "columnCount": -1,
+    "ignoreBlankCells": true,
+    "fillDown": false,
+    "keyColumnName": "Type",
+    "valueColumnName": "Value"
+  },
+  {
+    "op": "core/fill-down",
+    "description": "Fill down cells in column Country",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Country"
+  },
+  {
+    "op": "core/fill-down",
+    "description": "Fill down cells in column Project",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Project"
+  },
+  {
+    "op": "core/fill-down",
+    "description": "Fill down cells in column Statoil operator?",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Statoil operator?"
+  },
+  {
+    "op": "core/row-removal",
+    "description": "Remove rows",
+    "engineConfig": {
+      "facets": [
+        {
+          "invert": false,
+          "expression": "value",
+          "selectError": false,
+          "omitError": false,
+          "selectBlank": false,
+          "name": "Value",
+          "omitBlank": false,
+          "columnName": "Value",
+          "type": "list",
+          "selection": [
+            {
+              "v": {
+                "v": "-",
+                "l": "-"
+              }
+            }
+          ]
+        }
+      ],
+      "mode": "row-based"
+    }
+  },
+  {
+    "op": "core/column-addition",
+    "description": "Create column Currency at index 4 based on column Type using expression grel:if(contains(value,\"mmboe\"),\"MMBOE\",\"NOK\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "newColumnName": "Currency",
+    "columnInsertIndex": 4,
+    "baseColumnName": "Type",
+    "expression": "grel:if(contains(value,\"mmboe\"),\"MMBOE\",\"NOK\")",
+    "onError": "set-to-blank"
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Value using expression grel:toNumber(replace(value,\",\",\"\"))*1000000",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Value",
+    "expression": "grel:toNumber(replace(value,\",\",\"\"))*1000000",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Country to #Country",
+    "oldColumnName": "Country",
+    "newColumnName": "#Country"
+  },
+  {
+    "op": "core/column-addition",
+    "description": "Create column #project+company at index 2 based on column Project using expression grel:\"StatOil\"",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "newColumnName": "#project+company",
+    "columnInsertIndex": 2,
+    "baseColumnName": "Project",
+    "expression": "grel:\"StatOil\"",
+    "onError": "set-to-blank"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Project to #project",
+    "oldColumnName": "Project",
+    "newColumnName": "#project"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Statoil operator? to #project+company+isOperator",
+    "oldColumnName": "Statoil operator?",
+    "newColumnName": "#project+company+isOperator"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Type to #project+payment",
+    "oldColumnName": "Type",
+    "newColumnName": "#project+payment"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Currency to #project+payment+currency",
+    "oldColumnName": "Currency",
+    "newColumnName": "#project+payment+currency"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Value to #project+payment+value",
+    "oldColumnName": "Value",
+    "newColumnName": "#project+payment+value"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column #project+payment to #project+payment+type",
+    "oldColumnName": "#project+payment",
+    "newColumnName": "#project+payment+type"
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column #project+payment+type using expression grel:replace(value,\" (value in NOK millions)\",\"\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "#project+payment+type",
+    "expression": "grel:replace(value,\" (value in NOK millions)\",\"\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column #project+payment+type using expression grel:replace(value,\" (mmboe)\",\"\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "#project+payment+type",
+    "expression": "grel:replace(value,\" (mmboe)\",\"\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  }
+]

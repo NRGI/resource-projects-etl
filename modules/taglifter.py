@@ -78,7 +78,7 @@ class TagLifter:
                 break         
 
         if(tag_count < 3):
-            print "No column tagging found in first 25 rows."
+            print( "No column tagging found in first 25 rows.")
         else:
             data = data.rename(columns=mapping)
 
@@ -100,7 +100,7 @@ class TagLifter:
                 self.country_cache[row.get(path,"xx")] = country
         else:
             if return_default:
-                country = "123" + self.default_country
+                country = self.default_country
             else:
                 country = "unknown"
 
@@ -234,7 +234,7 @@ class TagLifter:
         
         for line, row in data.iterrows():
             if self.debug:
-                print "Processing row " + str(line)
+                print("Processing row " + str(line))
                 
             entity_cache = {}
             self.relationship_cache = {} # Reset the relationships cache for each row
@@ -344,7 +344,7 @@ class TagLifter:
                                             if search in entity_cache:
                                                 relationship = self.seek_class_relationship(entity,entity_cache[search]['entity'],row,country,lang,source_row)
                                             else: 
-                                                print search + " has not been created yet, so we can relate to it"
+                                                print( search + " has not been created yet, so we can relate to it")
                                         except ValueError:
                                             pass   
                             
@@ -360,7 +360,7 @@ class TagLifter:
                             # This needs to also check if we should be attaching to the class, or to a mediating class
 
                             if len(tag_path) > (1 + n + inc):
-                                print "Data properties can only be qualified by language tags. " + key + " is an invalid tag."
+                                print( "Data properties can only be qualified by language tags. " + key + " is an invalid tag.")
                             else:
                                 last_path = "+".join(tag_path[:-1])
                                 try: 
