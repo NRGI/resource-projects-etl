@@ -475,7 +475,7 @@ class TagLifter:
             elif predicate_range ==XSD.float:
               #  value = str(value).translate(None,['1','2','3','4','5','7','8','9','0','.'])  # ToDo - set-up better replacemnt for errange % signs etc.
                 try:
-                    value = locale.atof(value)
+                    value = locale.atof(str(value))
                 except ValueError:
                     value = value
             elif predicate_range ==XSD.integer:
