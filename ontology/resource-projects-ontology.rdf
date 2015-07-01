@@ -32,13 +32,16 @@
 
     <!-- http://resourceprojects.org/def/commodity -->
 
-    <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/commodity"/>
+    <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/commodity">
+        <rdfs:comment xml:lang="en">Relates a project, site or license to a commodity. </rdfs:comment>
+    </owl:ObjectProperty>
     
 
 
     <!-- http://resourceprojects.org/def/hasLocation -->
 
     <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/hasLocation">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Company"/>
         <rdfs:range rdf:resource="http://resourceprojects.org/def/Country"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/License"/>
         <rdfs:range rdf:resource="http://resourceprojects.org/def/Location"/>

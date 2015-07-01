@@ -370,30 +370,30 @@ class TagLifter:
                             # We attach any data properties to the previous class in the tag_path, or in the last column if no classes found since then
                             # ToDo: This needs to take more account of data types from the ontology
                             # This needs to also check if we should be attaching to the class, or to a mediating class
-
-                            if len(tag_path) > (1 + n + inc):
-                                print( "Data properties can only be qualified by language tags. " + key + " is an invalid tag.")
-                            else:
-                                last_path = "+".join(tag_path[:-1])
-                                try: 
-                                    step = entity_cache[last_path]['step']
-                                    step_class = entity_cache[last_path]['step_class']
-                                except KeyError:
-                                    step = None
-                                    step_class = None
-                                
-                                # We need to check any restrictions on the data property
-                                # 1. Can it be attached to the class;
-                                # 2. If not, can it be attached to the intermediary (found in the entity cache for the last path?)
-                                # 3. What typing do we need to provide? 
-                                
-                                if self.add_data_property(entity,entity_class,self.ontology[tag],row[key]):
-                                    pass
-                                elif step and self.add_data_property(step,step_class,self.ontology[tag],row[key]):
-                                    pass
+                            if(not(row[key]=="")):
+                                if len(tag_path) > (1 + n + inc):
+                                    print( "Data properties can only be qualified by language tags. " + key + " is an invalid tag.")
                                 else:
-                                    if self.allow_extra_properties:
-                                        self.graph.add((last_entity,self.ontology["misc/"+tag],Literal(row[key]))) 
+                                    last_path = "+".join(tag_path[:-1])
+                                    try: 
+                                        step = entity_cache[last_path]['step']
+                                        step_class = entity_cache[last_path]['step_class']
+                                    except KeyError:
+                                        step = None
+                                        step_class = None
+                                
+                                    # We need to check any restrictions on the data property
+                                    # 1. Can it be attached to the class;
+                                    # 2. If not, can it be attached to the intermediary (found in the entity cache for the last path?)
+                                    # 3. What typing do we need to provide? 
+                                
+                                    if self.add_data_property(entity,entity_class,self.ontology[tag],row[key]):
+                                        pass
+                                    elif step and self.add_data_property(step,step_class,self.ontology[tag],row[key]):
+                                        pass
+                                    else:
+                                        if self.allow_extra_properties:
+                                            self.graph.add((last_entity,self.ontology["misc/"+tag],Literal(row[key]))) 
                            
     def check_available_relationships(self,source):
           """
