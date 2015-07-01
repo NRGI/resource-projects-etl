@@ -23,7 +23,8 @@ The output of each process should be written to the root /data/ folder, from whe
 
 ## Requirements
 
-<strike>Python 3</strike> (Currently needs upgrades to work with Python 3)
+* Python 3
+* Bash
 
 ### Getting started
 
@@ -31,5 +32,13 @@ The output of each process should be written to the root /data/ folder, from whe
 virtualenv .ve --python=/usr/bin/python3
 source .ve/bin/activate
 pip install -r requirements.txt
+```
+
+### Running with docker
+
+```
+docker rm -f rp-etl rp-load
+docker run --name rp-etl -v /usr/src/app/data bjwebb/resource-projects-etl
+docker run --name rp-load --link virtuoso:virtuoso --volumes-from virtuoso --volumes-from rp-etl --rm rp-load
 ```
 
