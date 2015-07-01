@@ -48,6 +48,8 @@ At this stage it is important to choose whether to use jurisdiction restrictions
 * reconcile-restricted.json (ToDo) will use the country code value of the country column to look only for companies registered in this jurisdiction, and will use activeOn to affect the scoring of the data
 * [reconcile-unrestricted.json](refine/reconcile-unrestricted.json) - will match globally based on names only
 
+(Note: May require reconciliation to be run manually - as reconcile-unrestricted.json did not apply correctly in testing)
+
 Once data is returned, user input is needed to confirm the matches. Care should be taken to **only confirm a match when you are certain that you are identifying the correct legal entity**. For example, ensure that the ResourceProjects company is the same legal entity as the Open Corporates entity you are matching against. Checking the jurisdiction and dates of both can help with this. 
 
 Performing this matching might require in-depth research.

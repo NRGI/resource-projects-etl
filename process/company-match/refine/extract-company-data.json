@@ -4,25 +4,7 @@
     "description": "Create column OCJSON at index 2 by fetching URLs based on column label using expression grel:if(isNull(cells['label'].recon.match),\"\",\"http://api.opencorporates.com\"+cells['label'].recon.match.id)",
     "engineConfig": {
       "facets": [
-        {
-          "invert": false,
-          "expression": "row.starred",
-          "selectError": false,
-          "omitError": false,
-          "selectBlank": false,
-          "name": "Starred Rows",
-          "omitBlank": false,
-          "columnName": "",
-          "type": "list",
-          "selection": [
-            {
-              "v": {
-                "v": true,
-                "l": "true"
-              }
-            }
-          ]
-        }
+        
       ],
       "mode": "row-based"
     },
@@ -38,25 +20,7 @@
     "description": "Create column #company+location+identifier at index 3 based on column OCJSON using expression grel:parseJson(value).results.company.jurisdiction_code",
     "engineConfig": {
       "facets": [
-        {
-          "invert": false,
-          "expression": "row.starred",
-          "selectError": false,
-          "omitError": false,
-          "selectBlank": false,
-          "name": "Starred Rows",
-          "omitBlank": false,
-          "columnName": "",
-          "type": "list",
-          "selection": [
-            {
-              "v": {
-                "v": true,
-                "l": "true"
-              }
-            }
-          ]
-        }
+        
       ],
       "mode": "row-based"
     },
@@ -71,25 +35,7 @@
     "description": "Create column #company+startDate at index 3 based on column OCJSON using expression grel:parseJson(value).results.company.incorporation_date",
     "engineConfig": {
       "facets": [
-        {
-          "invert": false,
-          "expression": "row.starred",
-          "selectError": false,
-          "omitError": false,
-          "selectBlank": false,
-          "name": "Starred Rows",
-          "omitBlank": false,
-          "columnName": "",
-          "type": "list",
-          "selection": [
-            {
-              "v": {
-                "v": true,
-                "l": "true"
-              }
-            }
-          ]
-        }
+        
       ],
       "mode": "row-based"
     },
@@ -104,25 +50,7 @@
     "description": "Create column #company+endDate at index 3 based on column OCJSON using expression grel:parseJson(value).results.company.dissolution_date",
     "engineConfig": {
       "facets": [
-        {
-          "invert": false,
-          "expression": "row.starred",
-          "selectError": false,
-          "omitError": false,
-          "selectBlank": false,
-          "name": "Starred Rows",
-          "omitBlank": false,
-          "columnName": "",
-          "type": "list",
-          "selection": [
-            {
-              "v": {
-                "v": true,
-                "l": "true"
-              }
-            }
-          ]
-        }
+        
       ],
       "mode": "row-based"
     },
@@ -137,25 +65,7 @@
     "description": "Create column Group-from-company at index 3 based on column OCJSON using expression grel:parseJson(value).results.company.corporate_groupings[0].corporate_grouping.name",
     "engineConfig": {
       "facets": [
-        {
-          "invert": false,
-          "expression": "row.starred",
-          "selectError": false,
-          "omitError": false,
-          "selectBlank": false,
-          "name": "Starred Rows",
-          "omitBlank": false,
-          "columnName": "",
-          "type": "list",
-          "selection": [
-            {
-              "v": {
-                "v": true,
-                "l": "true"
-              }
-            }
-          ]
-        }
+        
       ],
       "mode": "row-based"
     },
