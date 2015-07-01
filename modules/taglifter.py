@@ -151,7 +151,8 @@ class TagLifter:
             identifier = country + "/" + self.generate_project_identifier(row[path])
         if entity_type == "company":
             identifier = uuid64.hex()
-
+        elif entity_type == "commodity":
+            identifier = self.clean_string(row['path'].strip()
         elif entity_type == "country":
             identifier = self.get_country(row,path)
         else:
