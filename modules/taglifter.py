@@ -3,11 +3,14 @@ from rdflib import Graph, URIRef, Literal
 from rdflib.namespace import FOAF, RDF, SKOS, OWL, RDFS, XSD
 from rdflib.namespace import Namespace
 from collections import OrderedDict, defaultdict
-from countrycode import countrycode
-import uuid64
+from countrycode.countrycode import countrycode
 import random
 import locale
 PROV = Namespace('http://www.w3.org/ns/prov#')
+
+import os, binascii
+def random_string():
+    return binascii.b2a_hex(os.urandom(8)).decode('ascii')
 
 class TagLifter:
     """A class for convering HXL-style tagged data into RDF linked data
@@ -31,7 +34,7 @@ class TagLifter:
     
     def clean_string(self,string):
         invalid_chars = ''.join(c for c in map(chr, range(256)) if not c.isalnum())
-        return str(string).translate(None,invalid_chars)
+        return str(string).translate(str.maketrans('', '', invalid_chars))
     
     def load_data(self,source):
            """Load data from a CSV file"""
@@ -145,7 +148,7 @@ class TagLifter:
         elif path in row.keys():
             path = path
         else: # We had nothing to work with, so just general a UUID
-            return country + "/" + uuid64.hex()
+            return country + "/" + random_string()
         
         cache_key = entity_type + self.clean_string(row[path])
         if cache_key in self.id_cache.keys() and len(self.clean_string(row[path]).strip()) > 1:
@@ -154,13 +157,13 @@ class TagLifter:
         if entity_type == "project":
             identifier = country + "/" + self.generate_project_identifier(row[path])
         elif entity_type == "company":
-            identifier = uuid64.hex()
+            identifier = random_string()
         elif entity_type == "commodity":
             identifier = self.clean_string(row[path]).strip()
         elif entity_type == "country":
             identifier = self.get_country(row,path)
         else:
-            identifier = country + "/" + uuid64.hex()
+            identifier = country + "/" + random_string()
 
         self.id_cache[cache_key] = identifier
 
@@ -201,7 +204,7 @@ class TagLifter:
         if not meta_data:
             meta_data = self.source_meta
         
-        entity = URIRef(self.base + "prov/source/" + uuid64.hex()) #ToDo - consider whether we should build this off of filename and time?
+        entity = URIRef(self.base + "prov/source/" + random_string()) #ToDo - consider whether we should build this off of filename and time?
         self.graph.add((entity,RDF.type,PROV.Entity)) ## ToDo - ****** CORRECT THE ENTITY TYPE HERE *****
         
         for key in meta_data.keys():
@@ -585,7 +588,7 @@ class TagLifter:
             # Then need to relate this to source, and to target
             # And return this entity to be written into the cache
             entity_type = rel['t1'].split("/")[-1]
-            identifier =  entity_type.lower() + "/" + uuid64.hex()
+            identifier =  entity_type.lower() + "/" + random_string()
             entity = URIRef(self.base+identifier )
             self.graph.add((entity,RDF.type,rel['t1']))
             self.graph.add((entity,PROV.wasDerivedFrom,source_row))

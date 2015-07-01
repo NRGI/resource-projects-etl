@@ -6,7 +6,6 @@ from taglifter import TagLifter
 tl = TagLifter(ontology = "../../ontology/resource-projects-ontology.rdf",source = "sources/eiti-project-level.csv",base="http://resourceprojects.org/",
             source_meta={"author":"Tim Davies","Source_Type":"official","Converted":"Today"})
 
-tl.limit_rows = 623
 tl.build_graph()
 
 print(tl.graph.serialize(format='turtle',destination="../../data/eiti-projects.ttl"))
