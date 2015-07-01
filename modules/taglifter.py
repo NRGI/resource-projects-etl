@@ -1,4 +1,5 @@
 import pandas 
+import urllib
 from rdflib import Graph, URIRef, Literal
 from rdflib.namespace import FOAF, RDF, SKOS, OWL, RDFS, XSD
 from rdflib.namespace import Namespace
@@ -141,7 +142,7 @@ class TagLifter:
     def generate_identifier(self,row,path,entity_type,country = "xx",lang="en"):
         if path + "+identifier" in row.keys(): #Check if this entity already has an identifier given in a column
             if not row[path + "+identifier"].strip() == "":
-                return row[path + "+identifier"].strip()
+                return urllib.parse.quote(row[path + "+identifier"].strip(),safe='/')
         
         if path + "+" + lang in row.keys():
             path = path + "+" + lang
