@@ -1,0 +1,15 @@
+[
+  {
+    "op": "core/column-addition",
+    "description": "Create column #group+identifier at index 3 based on column Groupings using expression grel:if(value==\"\",\"\",\"opencorp/\"+value)",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "newColumnName": "#group+identifier",
+    "columnInsertIndex": 3,
+    "baseColumnName": "Groupings",
+    "expression": "grel:if(value==\"\",\"\",\"opencorp/\"+value)",
+    "onError": "set-to-blank"
+  }
+]
