@@ -5,3 +5,4 @@ data/*
 .ve
 .ipynb_checkpoints
 process/*/data
+ontology/catalog-v001.xml
