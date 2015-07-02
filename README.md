@@ -38,7 +38,7 @@ pip install -r requirements.txt
 
 ```
 docker rm -f rp-etl rp-load
-docker run --name rp-etl -v /usr/src/app/data bjwebb/resource-projects-etl
+docker run --name rp-etl -v /usr/src/app/data -v /usr/src/app/ontology bjwebb/resource-projects-etl
 docker run --name rp-load --link virtuoso:virtuoso --volumes-from virtuoso --volumes-from rp-etl --rm bjwebb/resource-projects-etl-load
 ```
 
