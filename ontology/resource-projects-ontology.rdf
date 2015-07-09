@@ -43,6 +43,7 @@
     <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/hasLocation">
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Company"/>
         <rdfs:range rdf:resource="http://resourceprojects.org/def/Country"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Group"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/License"/>
         <rdfs:range rdf:resource="http://resourceprojects.org/def/Location"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Organization"/>

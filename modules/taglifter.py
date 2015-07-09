@@ -1,5 +1,6 @@
 import pandas 
 import urllib
+import re
 from rdflib import Graph, URIRef, Literal
 from rdflib.namespace import FOAF, RDF, SKOS, OWL, RDFS, XSD
 from rdflib.namespace import Namespace
@@ -32,10 +33,9 @@ class TagLifter:
         return string[0].upper()+string[1:]
         
     
-    
     def clean_string(self,string):
-        invalid_chars = ''.join(c for c in map(chr, range(256)) if not c.isalnum())
-        return str(string).translate(str.maketrans('', '', invalid_chars))
+        string = re.sub('[^0-9a-zA-Z]+', '', string)
+        return string
     
     def load_data(self,source):
            """Load data from a CSV file"""
