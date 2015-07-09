@@ -1,6 +1,7 @@
 __pycache__
 data/*
 *.swp
+*.pyc
 *~
 .ve
 .ipynb_checkpoints
