@@ -39,13 +39,13 @@ pip install -r requirements.txt
 ./transform_all.sh
 ```
 
-You will then have some data in the data/ directory. Currently the load step can only be run with docker.
+You will then have some data in the data/ directory. Currently the load step can only be run with docker (see "Using a data directory on the host system" below).
 
 ## Running with docker
 
 ### Requirements
 
-Docker *1.7* (actual requirement may be >=1.6, but 1.7 is what's been tested. This is required because the docker library python image doesn't work otherwise).
+Docker **1.7** (actual requirement may be >=1.6, but 1.7 is what's been tested. This is required because the docker library python image doesn't work otherwise).
 
 ### Running from docker hub
 
@@ -57,6 +57,23 @@ docker run --name rp-load --link virtuoso:virtuoso --volumes-from virtuoso --vol
 
 To run the last command you will need [virtuoso container running](https://github.com/NRGI/resourceprojects.org-frontend/#pre-requisites).
 
+
+### Using a data directory on the host system
+
+To transform the data, and put it in ./data on the host system, run:
+
+```
+docker rm -f rp-etl
+docker run --name rp-etl -v `pwd`/data:/usr/src/app/data bjwebb/resource-projects-etl
+```
+
+To load the data, you can then run:
+
+```
+docker run --name rp-load --link virtuoso:virtuoso -v `pwd`/data:/usr/src/app/data -v `pwd`/ontology:/usr/src/app/ontology --rm bjwebb/resource-projects-etl-load
+```
+
+This load step can also be used to load data not generated using a dockerized step.
 
 ### Building docker images
 

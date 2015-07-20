@@ -1,11 +1,3 @@
-Docker container definition for loading data into virtuoso.
+Docker container for loading data resource-projects-etl data into virtuoso.
 
-You will need a [virtuoso container running](https://github.com/NRGI/resourceprojects.org-frontend/#pre-requisites).
-
-Then from this directory:
-
-```
-docker build -t rp-load .
-cd ..
-docker run --name rp-load --link virtuoso:virtuoso --volumes-from virtuoso -v `pwd`/data:/data --rm rp-load
-```
+Information about usage can be found in the main README at https://github.com/NRGI/resource-projects-etl/blob/master/README.md
