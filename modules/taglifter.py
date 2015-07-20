@@ -159,8 +159,10 @@ class TagLifter:
             identifier = country + "/" + self.generate_project_identifier(row[path])
         elif entity_type == "company":
             identifier = random_string()
-        elif entity_type == "commodity":
+        elif entity_type == "source":
             identifier = self.clean_string(row[path]).strip()
+        elif entity_type == "commodity":
+            identifier = "local/" + self.clean_string(row[path]).strip()
         elif entity_type == "country":
             identifier = self.get_country(row,path)
         else:
@@ -513,93 +515,94 @@ class TagLifter:
         At present, the sparql only handles for owl:someValuesFrom - (ToDo: Extend this to include owl:allValuesFrom)
         
         """
-        cache_key = str(source) + "_"+ str(target)
-        if cache_key in self.relationship_cache.keys():
-            return self.relationship_cache[cache_key]        
+        if not source == target:
+            cache_key = str(source) + "_"+ str(target)
+            if cache_key in self.relationship_cache.keys():
+                return self.relationship_cache[cache_key]        
         
-        source_class = self.graph.value(source, RDF.type)
-        target_class = self.graph.value(target, RDF.type)
+            source_class = self.graph.value(source, RDF.type)
+            target_class = self.graph.value(target, RDF.type)
         
-        rt_cache_key = str(source_class)+"_"+str(target_class)
-        if rt_cache_key in self.relationship_cache.keys():
-            relationships = self.relationship_cache[rt_cache_key]
-        else:
-            query = """PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-            PREFIX owl: <http://www.w3.org/2002/07/owl#>
-            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-            SELECT DISTINCT ?o ?p1 ?t1 ?p2 ?t2 ?restrictionClass ?restriction2class
-            WHERE { 
-              ?o  a owl:Class. 
-              FILTER(?o = <%s>)
-              {  
-                ?o rdfs:subClassOf+ ?restriction.
-                ?restriction a owl:Restriction. 
-                ?restriction owl:onProperty ?p1.
-                {
-                  {
-                    ?restriction owl:someValuesFrom ?t1.
-                  } UNION {  
-                    ?restriction owl:someValuesFrom ?restrictionClass.
-                    ?t1 rdfs:subClassOf+ ?restrictionClass.
-                  }
-                }
-              }
-              OPTIONAL {
-                ?t1 rdfs:subClassOf+ ?restriction2.
-                ?restriction2 a owl:Restriction.
-                ?restriction2 owl:onProperty ?p2.
-                {
-                  {
-                     ?restriction2 owl:someValuesFrom ?t2.
-                  } UNION {
-                     ?restriction2 owl:someValuesFrom ?restriction2class.
-                     ?t2 rdfs:subClassOf+ ?restriction2class.
-                  }
-                  FILTER(?t2 = <%s>)
-
-                }
-              }
-
-            }"""%(source_class,target_class)
-                
-            relationships = {"direct":[],"indirect":[]}
-            if query in self.onto_query_cache:
-                q = self.onto_query_cache[query]
+            rt_cache_key = str(source_class)+"_"+str(target_class)
+            if rt_cache_key in self.relationship_cache.keys():
+                relationships = self.relationship_cache[rt_cache_key]
             else:
-                q = self.onto.query(query)
-                self.onto_query_cache[query] = q
-            for res in q:
-                if res['t1'] == target_class:
-                    relationships['direct'].append(res['p1'])
-                if res['t2'] == target_class:
-                    relationships['indirect'].append({"p1":res['p1'],"t1":res["t1"],"p2":res["p2"]})
-            #ToDo: Add handling to highlight cases of ambiguity (.e.g. when multiple possible direct or indirect relationships)        
-            self.relationship_cache[rt_cache_key] = relationships
+                query = """PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                PREFIX owl: <http://www.w3.org/2002/07/owl#>
+                PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                SELECT DISTINCT ?o ?p1 ?t1 ?p2 ?t2 ?restrictionClass ?restriction2class
+                WHERE { 
+                  ?o  a owl:Class. 
+                  FILTER(?o = <%s>)
+                  {  
+                    ?o rdfs:subClassOf+ ?restriction.
+                    ?restriction a owl:Restriction. 
+                    ?restriction owl:onProperty ?p1.
+                    {
+                      {
+                        ?restriction owl:someValuesFrom ?t1.
+                      } UNION {  
+                        ?restriction owl:someValuesFrom ?restrictionClass.
+                        ?t1 rdfs:subClassOf+ ?restrictionClass.
+                      }
+                    }
+                  }
+                  OPTIONAL {
+                    ?t1 rdfs:subClassOf+ ?restriction2.
+                    ?restriction2 a owl:Restriction.
+                    ?restriction2 owl:onProperty ?p2.
+                    {
+                      {
+                         ?restriction2 owl:someValuesFrom ?t2.
+                      } UNION {
+                         ?restriction2 owl:someValuesFrom ?restriction2class.
+                         ?t2 rdfs:subClassOf+ ?restriction2class.
+                      }
+                      FILTER(?t2 = <%s>)
+
+                    }
+                  }
+
+                }"""%(source_class,target_class)
+                
+                relationships = {"direct":[],"indirect":[]}
+                if query in self.onto_query_cache:
+                    q = self.onto_query_cache[query]
+                else:
+                    q = self.onto.query(query)
+                    self.onto_query_cache[query] = q
+                for res in q:
+                    if res['t1'] == target_class:
+                        relationships['direct'].append(res['p1'])
+                    if res['t2'] == target_class:
+                        relationships['indirect'].append({"p1":res['p1'],"t1":res["t1"],"p2":res["p2"]})
+                #ToDo: Add handling to highlight cases of ambiguity (.e.g. when multiple possible direct or indirect relationships)        
+                self.relationship_cache[rt_cache_key] = relationships
 
         
-        for rel in relationships['direct']:
-            self.graph.add((source,URIRef(rel),target))
-            self.add_inverse(source,rel,target)
-            self.relationship_cache[cache_key] = {"entity":target,"class":target_class}
-            return self.relationship_cache[cache_key] 
+            for rel in relationships['direct']:
+                self.graph.add((source,URIRef(rel),target))
+                self.add_inverse(source,rel,target)
+                self.relationship_cache[cache_key] = {"entity":target,"class":target_class}
+                return self.relationship_cache[cache_key] 
         
-        for rel in relationships['indirect']:
-            # Need to create the entity t1
-            # Then need to relate this to source, and to target
-            # And return this entity to be written into the cache
-            entity_type = rel['t1'].split("/")[-1]
-            identifier =  entity_type.lower() + "/" + random_string()
-            entity = URIRef(self.base+identifier )
-            self.graph.add((entity,RDF.type,rel['t1']))
-            self.graph.add((entity,PROV.wasDerivedFrom,source_row))
+            for rel in relationships['indirect']:
+                # Need to create the entity t1
+                # Then need to relate this to source, and to target
+                # And return this entity to be written into the cache
+                entity_type = rel['t1'].split("/")[-1]
+                identifier =  entity_type.lower() + "/" + random_string()
+                entity = URIRef(self.base+identifier )
+                self.graph.add((entity,RDF.type,rel['t1']))
+                self.graph.add((entity,PROV.wasDerivedFrom,source_row))
             
-            self.graph.add((source,rel['p1'],entity))
-            self.add_inverse(source,rel['p1'],entity) # We add the inverse relationships also
-            self.graph.add((entity,rel['p2'],target))
-            self.add_inverse(entity,rel['p2'],target) # We add the inverse relationships also
-            self.relationship_cache[cache_key] = {"entity":target,"class":target_class,"step":entity,"step_class":rel['t1']}
-            return self.relationship_cache[cache_key]
+                self.graph.add((source,rel['p1'],entity))
+                self.add_inverse(source,rel['p1'],entity) # We add the inverse relationships also
+                self.graph.add((entity,rel['p2'],target))
+                self.add_inverse(entity,rel['p2'],target) # We add the inverse relationships also
+                self.relationship_cache[cache_key] = {"entity":target,"class":target_class,"step":entity,"step_class":rel['t1']}
+                return self.relationship_cache[cache_key]
 
         
     def add_inverse(self,subj,predicate,obj):
