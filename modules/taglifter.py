@@ -77,8 +77,9 @@ class TagLifter:
                     new_key = self.clean_string(self.class_title(key))
                     mapping[key] = new_key[0].lower()+new_key[1:]
             if tag_count > 3: # We assume we've found the tag row once we've got a row with more than 3 tags in
-                #Remove the tag row
-                data = data.drop(line)
+                #Remove all the rows above
+                for rmrow in range(0,line+1):
+                    data = data.drop(rmrow)
                 break         
 
         if(tag_count < 3):
@@ -113,7 +114,20 @@ class TagLifter:
                 country = "unknown"
 
         return country.lower()
+    
+    # ToDo - refactor in future 
+    def get_country_code_from_name(self,name):
+        try:
+            country = self.country_cache[name]
+        except KeyError:
+            country = countrycode(codes=[name],origin='country_name',target="iso2c")[0]
+            if(len(country)==2):
+                self.country_cache[name] = country
+            else:
+                country = random_string()
+                self.country_cache[name] = country
         
+        return country.lower()
         
     def get_language(self,row):
         lang = row.get("#language",default=self.default_language)
@@ -159,12 +173,18 @@ class TagLifter:
             identifier = country + "/" + self.generate_project_identifier(row[path])
         elif entity_type == "company":
             identifier = random_string()
+        elif entity_type == "group":
+            identifier = self.clean_string(row[path]).strip().lower() + "-" + random_string()[0:4]
         elif entity_type == "source":
             identifier = self.clean_string(row[path]).strip()
         elif entity_type == "commodity":
             identifier = "local/" + self.clean_string(row[path]).strip()
+        elif entity_type == "contributor":
+            identifier = random_string()
         elif entity_type == "country":
-            identifier = self.get_country(row,path)
+            identifier = self.get_country_code_from_name(self.clean_string(row[path]).strip())
+        elif entity_type == "paymentType":
+            identifier = self.get_country(row,path)    
         else:
             identifier = country + "/" + random_string()
 
@@ -314,9 +334,9 @@ class TagLifter:
                                 else:
                                     label_rel = SKOS.altLabel
                                 if (current_path + "+" + col_lang) in row.keys():
-                                    self.graph.add((entity,label_rel,Literal(row[current_path + "+" + col_lang],lang=col_lang)))
+                                    self.graph.add((entity,label_rel,Literal(row[current_path + "+" + col_lang].strip(),lang=col_lang)))
                                 elif current_path in row.keys():
-                                    self.graph.add((entity,label_rel,Literal(row[current_path],lang=col_lang)))                                
+                                    self.graph.add((entity,label_rel,Literal(row[current_path].strip(),lang=col_lang)))                                
                             
                                 # First check if we can make a relationship between this entity, and it's parent, or nearest neighbour
                                 if not last_entity == entity:
