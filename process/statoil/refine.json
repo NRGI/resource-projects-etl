@@ -239,5 +239,538 @@
     "baseColumnName": "#project+company+isOperator",
     "expression": "grel:2014",
     "onError": "set-to-blank"
+  },
+  {
+    "op": "core/column-addition",
+    "description": "Create column Jurisdiction at index 1 based on column #country using expression grel:\"no\"",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "newColumnName": "Jurisdiction",
+    "columnInsertIndex": 1,
+    "baseColumnName": "#country",
+    "expression": "grel:\"no\"",
+    "onError": "set-to-blank"
+  },
+  {
+    "op": "core/recon",
+    "description": "Reconcile cells in column #project to type /organization/organization",
+    "columnName": "#project",
+    "config": {
+      "mode": "standard-service",
+      "service": "https://opencorporates.com/reconcile",
+      "identifierSpace": "http://rdf.freebase.com/ns/type.object.id",
+      "schemaSpace": "http://rdf.freebase.com/ns/type.object.id",
+      "type": {
+        "id": "/organization/organization",
+        "name": "Organization"
+      },
+      "autoMatch": true,
+      "columnDetails": [
+        {
+          "column": "Jurisdiction",
+          "propertyName": "Jurisdiction Code",
+          "propertyID": "jurisdiction_code"
+        }
+      ]
+    },
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    }
+  },
+  {
+    "op": "core/recon-judge-similar-cells",
+    "description": "Match topic STATOIL PETROLEUM AS (/companies/no/990888213) for cells containing \"Statoil Petroleum AS\" in column #project",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "#project",
+    "similarValue": "Statoil Petroleum AS",
+    "judgment": "matched",
+    "match": {
+      "id": "/companies/no/990888213",
+      "name": "STATOIL PETROLEUM AS",
+      "score": 85,
+      "types": [
+        "/organization/organization"
+      ]
+    },
+    "shareNewTopics": false
+  },
+  {
+    "op": "core/recon-judge-similar-cells",
+    "description": "Match topic STATOIL ANGOLA BLOCK 17 AS (/companies/no/977312043) for cells containing \"Statoil Angola Block 17 AS\" in column #project",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "#project",
+    "similarValue": "Statoil Angola Block 17 AS",
+    "judgment": "matched",
+    "match": {
+      "id": "/companies/no/977312043",
+      "name": "STATOIL ANGOLA BLOCK 17 AS",
+      "score": 85,
+      "types": [
+        "/organization/organization"
+      ]
+    },
+    "shareNewTopics": false
+  },
+  {
+    "op": "core/recon-judge-similar-cells",
+    "description": "Match topic STATOIL NORTH AFRICA OIL AS (/companies/no/985648026) for cells containing \"Statoil North Africa Oil AS\" in column #project",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "#project",
+    "similarValue": "Statoil North Africa Oil AS",
+    "judgment": "matched",
+    "match": {
+      "id": "/companies/no/985648026",
+      "name": "STATOIL NORTH AFRICA OIL AS",
+      "score": 85,
+      "types": [
+        "/organization/organization"
+      ]
+    },
+    "shareNewTopics": false
+  },
+  {
+    "op": "core/recon-judge-similar-cells",
+    "description": "Match topic STATOIL DEZASSETE AS (/companies/no/866009392) for cells containing \"Statoil Dezassete AS\" in column #project",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "#project",
+    "similarValue": "Statoil Dezassete AS",
+    "judgment": "matched",
+    "match": {
+      "id": "/companies/no/866009392",
+      "name": "STATOIL DEZASSETE AS",
+      "score": 85,
+      "types": [
+        "/organization/organization"
+      ]
+    },
+    "shareNewTopics": false
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column #project",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "#project",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "Statoil Indonesia North Makassar S. AS"
+        ],
+        "to": "Statoil Indonesia North Makassar Strait AS"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column #project",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "#project",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "Statoil O&G Mozambique AS"
+        ],
+        "to": "Statoil Oil & Gas Mozambique AS"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column #project",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "#project",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "Statoil F��r��yene AS"
+        ],
+        "to": "Statoil Færøyene AS"
+      }
+    ]
+  },
+  {
+    "op": "core/recon",
+    "description": "Reconcile cells in column #project to type /organization/organization",
+    "columnName": "#project",
+    "config": {
+      "mode": "standard-service",
+      "service": "https://opencorporates.com/reconcile",
+      "identifierSpace": "http://rdf.freebase.com/ns/type.object.id",
+      "schemaSpace": "http://rdf.freebase.com/ns/type.object.id",
+      "type": {
+        "id": "/organization/organization",
+        "name": "Organization"
+      },
+      "autoMatch": true,
+      "columnDetails": [
+        {
+          "column": "Jurisdiction",
+          "propertyName": "Jurisdiction Code",
+          "propertyID": "jurisdiction_code"
+        }
+      ]
+    },
+    "engineConfig": {
+      "facets": [
+        {
+          "invert": false,
+          "expression": "row.starred",
+          "selectError": false,
+          "omitError": false,
+          "selectBlank": false,
+          "name": "Starred Rows",
+          "omitBlank": false,
+          "columnName": "",
+          "type": "list",
+          "selection": [
+            {
+              "v": {
+                "v": true,
+                "l": "true"
+              }
+            }
+          ]
+        }
+      ],
+      "mode": "row-based"
+    }
+  },
+  {
+    "op": "core/column-addition",
+    "description": "Create column #company+openCorporatesURL at index 3 based on column #project using expression grel:cell.recon.match.id",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "newColumnName": "#company+openCorporatesURL",
+    "columnInsertIndex": 3,
+    "baseColumnName": "#project",
+    "expression": "grel:cell.recon.match.id",
+    "onError": "set-to-blank"
+  },
+  {
+    "op": "core/column-addition",
+    "description": "Create column #company at index 3 based on column #project using expression grel:cell.recon.match.name",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "newColumnName": "#company",
+    "columnInsertIndex": 3,
+    "baseColumnName": "#project",
+    "expression": "grel:cell.recon.match.name",
+    "onError": "set-to-blank"
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column #project",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "#project",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "Statoil Angola Block 15 AS"
+        ],
+        "to": "Block 15"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column #project",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "#project",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "Statoil Angola Block 17 AS"
+        ],
+        "to": "Block 17"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column #project",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "#project",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "Statoil Angola Block 22 AS"
+        ],
+        "to": "Block 22"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column #project",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "#project",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "Statoil Angola Block 25 AS"
+        ],
+        "to": "Block 25"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column #project",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "#project",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "Statoil Angola Block 31 AS"
+        ],
+        "to": "Block 31"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column #project",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "#project",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "Statoil Angola Block 39 AS"
+        ],
+        "to": "Block 39"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column #project",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "#project",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "Statoil Angola Block 40 AS"
+        ],
+        "to": "Block 40"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column #project",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "#project",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "Statoil Indonesia Halmahera II AS"
+        ],
+        "to": "Halmahera II AS"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column #project",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "#project",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "Statoil Indonesia Karama AS"
+        ],
+        "to": "Karama"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column #project",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "#project",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "Statoil Indonesia North Ganal AS"
+        ],
+        "to": "North Ganal"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column #project",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "#project",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "Statoil Indonesia North Makassar Strait AS"
+        ],
+        "to": "North Makassar Strait"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column #project",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "#project",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "Statoil Indonesia Obi AS"
+        ],
+        "to": "Obi"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column #project",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "#project",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "Statoil Indonesia West Papua IV AS"
+        ],
+        "to": "West Papua IV"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column #project",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "#project",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "Statoil Hassi Mouina AS"
+        ],
+        "to": "Hassi Mouina"
+      }
+    ]
   }
 ]

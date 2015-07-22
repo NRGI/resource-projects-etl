@@ -4,6 +4,12 @@ This documents a manual conversion process.
 
 Data has been scraped by NRGI from the StatOil reports and is available at https://docs.google.com/spreadsheets/d/16YS6-3r9iPzxqY0CJJChdEppSAjybDSXk5l67lGf2AA/edit#gid=1542370502
 
+Preparing this data involves:
+
+* Reconciliation against the OpenCorporates API to identify companies
+* Manually renaming projects based on best-efforts and cross-referencing Open Oil block data
+
+
 ## Process
 
 (1) Download the 'Consolidated project overview (not in report)' sheet to sources/statoil-2014-project-overview.csv
@@ -14,13 +20,11 @@ Data has been scraped by NRGI from the StatOil reports and is available at https
 
 (4) Export the results as CSV to sources/statoil-2014-project-overview-refined.csv
 
-(5) Run transform.py
+(5) Upload into online template at https://docs.google.com/spreadsheets/d/1ZOPwbn98xlccJ01uDXIRNxPxQAnWJ99bQTtpelSuyEY/edit#gid=21324452 and manually curate data
 
-The output should be placed into /data/statoil-2014-payments.ttl
+(6) Run the google-docs-transform.py script against this spreadsheet. 
 
 
-## Outstanding tasks
 
-* [ ] Add additional provenance information
-* [ ] Switch to using categorisation of payment types
-* [ ] Check all values are being captured correctly
+
+

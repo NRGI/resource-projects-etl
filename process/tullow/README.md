@@ -11,9 +11,6 @@ Manually extracted by NRGI and manually transformed for loading.
 
 (3) Run the processes described in refine.json
 
-(4) Run the transform.py script
+(4) Manually copy and layout in https://docs.google.com/spreadsheets/d/11rpwhBfAPMHxnnHvqdp9RwZNOhbTvsLXxnHZtW_tS3M/edit#gid=1600730055
 
-
-### Outstanding tasks
- 
-* [ ] Write provenance files
+(5) Use transform-from-gdocs.py to process

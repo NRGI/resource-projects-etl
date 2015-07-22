@@ -7,4 +7,4 @@ tl = TagLifter(ontology = "../../ontology/resource-projects-ontology.rdf",source
 
 tl.build_graph()
 
-print(tl.graph.serialize(format='turtle',destination="../../data/statoil-2014-payments.ttl"))
+tl.graph.serialize(format='turtle',destination="../../data/statoil-2014-payments.ttl")
