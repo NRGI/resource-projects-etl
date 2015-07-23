@@ -70,7 +70,7 @@ docker run --name rp-etl -v `pwd`/data:/usr/src/app/data bjwebb/resource-project
 To load the data, you can then run:
 
 ```
-docker run --name rp-load --link virtuoso:virtuoso -v `pwd`/data:/usr/src/app/data -v `pwd`/ontology:/usr/src/app/ontology --rm bjwebb/resource-projects-etl-load
+docker run --name rp-load --link virtuoso:virtuoso --volumes-from virtuoso -v `pwd`/data:/usr/src/app/data -v `pwd`/ontology:/usr/src/app/ontology --rm bjwebb/resource-projects-etl-load
 ```
 
 This load step can also be used to load data not generated using a dockerized step.
