@@ -1,0 +1,2 @@
+-e git+https://github.com/maparent/virtuoso-python.git@62d3ba8037e3479c07aa01f284d9ed34d7fcc4b2#egg=virtuoso
+-e git+https://github.com/Bjwebb/pyodbc.git@459382de8fccd0bac86b53ea40bffb8c10184060#egg=pyodbc
