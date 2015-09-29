@@ -82,8 +82,9 @@ class TagLifter:
                     data = data.drop(rmrow)
                 break         
 
-        if(tag_count < 3):
-            print( "No column tagging found in first 25 rows.")
+        if(tag_count < 2):
+            print( "No column tagging found in first 25 rows. Skipping sheet.")
+            data = []
         else:
             data = data.rename(columns=mapping)
 
