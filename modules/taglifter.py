@@ -153,48 +153,78 @@ class TagLifter:
             self.type_cache[tag] = tag_type
         return tag_type
 
-
+    # Check for an def:identifierPattern property attached to any given class
+    def get_id_pattern(self,tag):
+        if tag in self.id_pattern_cache.keys():
+            pattern = self.id_pattern_cache[tag]
+        else: 
+           pattern = self.onto.value(self.ontology[tag],self.ontology["identifierPattern"]) 
+           if(pattern == None):
+               pattern = '{random}'
+           self.id_pattern_cache[tag] = pattern
+        
+        return pattern
+    
     def generate_identifier(self,row,path,entity_type,country = "xx",lang="en"):
-        if path + "+identifier" in row.keys(): #Check if this entity already has an identifier given in a column
+        #1. Check if this entity already has an identifier given in an +identifier column
+        # E.g, if path is #project+country, look for #project+company+identifier
+        if path + "+identifier" in row.keys():
             if not row[path + "+identifier"].strip() == "":
                 return urllib.parse.quote(row[path + "+identifier"].strip(),safe='/')
         
+        #2. Check if we have a default language tagged, or non-language tagged, column for this path
+        # E.g. If the node found was #project+company+share, and we've been passed #project+company
+        # check if #project+company+en or #project+company columns exist to give us a name
+        # of the entity to work with
         if path + "+" + lang in row.keys():
             path = path + "+" + lang
         elif path in row.keys():
             path = path
-        else: # We had nothing to work with, so just general a UUID
+        else: # We had nothing to work with, so generate a random string. 
             return country + "/" + random_string()
         
+        #3. Check if we already have an identifier for a thing of this type, and with this name, in the cache
         cache_key = entity_type + self.clean_string(row[path])
         if cache_key in self.id_cache.keys() and len(self.clean_string(row[path]).strip()) > 1:
             return self.id_cache[cache_key]
 
-        if entity_type == "project":
-            identifier = country + "/" + self.generate_project_identifier(row[path])
-        elif entity_type == "company":
-            identifier = random_string()
-        elif entity_type == "group":
-            identifier = self.clean_string(row[path]).strip().lower() + "-" + random_string()[0:4]
-        elif entity_type == "source":
-            identifier = self.clean_string(row[path]).strip()
-        elif entity_type == "commodity":
-            identifier = "local/" + self.clean_string(row[path]).strip()
-        elif entity_type == "contributor":
-            identifier = random_string()
-        elif entity_type == "country":
-            identifier = self.get_country_code_from_name(self.clean_string(row[path]).strip())
-        elif entity_type == "paymentType":
-            identifier = self.get_country(row,path)    
-        else:
-            identifier = country + "/" + random_string()
+        pattern = self.get_id_pattern(self.class_title(entity_type))
+        
+        #4. If not, construct an identifier based on the appropriate pattern
+        # ID patterns include
+        #  - Country {country} 
+        #  - Country from name {country-from-name}
+        #  - Random string {random}
+        #  - Geographic random string (look for a country column) {country}-{random}
+        #  - First and Second Word and random suffix {eyekey}-{suffix}
+        #  - Clean string {cleanstring}
+        
+        if "{country}" in pattern:
+            pattern = pattern.replace("{country}",country)
+        
+        if "{country-from-name}" in pattern:
+            pattern = pattern.replace("{country-from-name}",self.get_country_code_from_name(self.clean_string(row[path]).strip()))
+        
+        if "{random}" in pattern:
+            pattern = pattern.replace("{random}",random_string())
+        
+        if "{eyekey}" in pattern:
+            pattern = pattern.replace("{eyekey}",self.generate_eyekey(row[path]))
+        
+        if "{suffix}" in pattern:
+            pattern = pattern.replace("{suffix}",''.join(random.choice('0123456789abcdefghijklmnopqrstuvwxyz') for i in range(6)))
+    
+        if "{cleanstring}" in pattern:
+            pattern = pattern.replace("{cleanstring}",self.clean_string(row[path]).strip())
+            
+        identifier = pattern
 
         self.id_cache[cache_key] = identifier
 
         return identifier
 
-    def generate_project_identifier(self,name):
-        """Generates a project identifier.
+    def generate_eyekey(self,name):
+        """Generates an identifier that is easy to eye-ball and recognise when reading down a list of data
 
         If the project name is a single word, use the first 4 digits, then a 6 characther random alphanumeric string.
         If the project name is two words, use the first two digits of each word. 
@@ -204,12 +234,11 @@ class TagLifter:
         """
         name = name.lower().split(" ")
         if len(name) == 1:
-            start = self.clean_string(name[0])[:4]
+            eyekey = self.clean_string(name[0])[:4]
         else:
-            start = self.clean_string(name[0])[:2] + self.clean_string(name[1])[:2]
+            eyekey = self.clean_string(name[0])[:2] + self.clean_string(name[1])[:2]
 
-        suffix = ''.join(random.choice('0123456789abcdefghijklmnopqrstuvwxyz') for i in range(6))
-        return start + "-" + suffix
+        return eyekey
 
     # Create a new entity of a given class (entity_type)
     def create_entity(self,entity_type,path,row,country,lang):
@@ -648,6 +677,7 @@ class TagLifter:
         self.id_cache = {}
         self.type_cache = {}
         self.relationship_cache = {}
+        self.id_pattern_cache = {}
         self.default_language = "en"
         self.default_country = "xx"
         self.allow_extra_properties = True
