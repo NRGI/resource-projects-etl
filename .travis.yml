@@ -13,3 +13,4 @@ script:
 after_success:
     - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
     - docker push opendataservices/resource-projects-etl
+    - if [[ $TRAVIS_PULL_REQUEST -eq "false" ]]; then docker tag opendataservices/resource-projects-etl opendataservices/resource-projects-etl:${TRAVIS_TAG:-$TRAVIS_BRANCH}; docker push opendataservices/resource-projects-etl:${TRAVIS_TAG:-$TRAVIS_BRANCH}; fi
