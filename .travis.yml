@@ -5,7 +5,7 @@ services:
 
 before_install:
     - docker pull opendataservices/resource-projects-etl
-    - docker build -t opendataservices/resource-projects-etl load
+    - docker build -t opendataservices/resource-projects-etl .
 
 script:
     - true
