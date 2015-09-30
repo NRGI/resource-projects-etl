@@ -1,8 +1,4 @@
 from setuptools import setup
-import sys
-
-with open('./requirements.txt') as requirements:
-    install_requires = requirements.read().strip().splitlines()
 
 setup(
     name='resource_projects_etl',
@@ -10,11 +6,11 @@ setup(
     author='Open Data Services',
     author_email='code@opendataservices.coop',
     package_dir = {'': 'modules'},
-    py_modules=['taglifter'],
+    py_modules=['taglifter', 'settings'],
     url='https://github.com/NRGI/resource-projects-etl',
     description='',
     classifiers=[
         'License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)',
     ],
-    install_requires=install_requires
+    install_requires=['cove', 'pandas', 'rdflib', 'countrycode'],
 )

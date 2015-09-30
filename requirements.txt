@@ -1,20 +1,12 @@
+-e git+https://github.com/OpenDataServices/cove.git@7143b59587e077e4b4c79b935b3ee6e7017e5500#egg=cove
+-e git+https://github.com/OpenDataServices/flatten-tool.git@61d8404b444f10384363cde1cad542a0d04af004#egg=flattentool
+gunicorn==19.3.0
+pandas==0.16.2
+rdflib==4.2.1
 countrycode==0.2
-certifi==2015.4.28
-ipdb==0.8
-ipython==3.1.0
-isodate==0.5.1
-Jinja2==2.7.3
-jsonschema==2.4.0
-MarkupSafe==0.23
-numpy==1.9.2
-pandas==0.16.1
+
+numpy==1.9.3
 pyparsing==2.0.3
+isodate==0.5.4
 python-dateutil==2.4.2
-pytz==2015.4
-pyzmq==14.6.0
-rdflib==4.2.0
-requests==2.7.0
-six==1.9.0
-tornado==4.1
-xlrd==0.9.3
-uuid64==0.2.0
+
