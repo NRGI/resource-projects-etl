@@ -135,11 +135,3 @@ PROCESSES = OrderedDict([
         'main': False
     }),
 ])
-
-# Add id and reverse fields to each process
-PROCESSES = OrderedDict([
-    (process_id, dict(
-        id=process_id,
-        reverse=PROCESSES[process['reverse_id']] if 'reverse_id' in process else None,
-        **process))
-    for process_id, process in PROCESSES.items()])

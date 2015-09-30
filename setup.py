@@ -6,7 +6,7 @@ setup(
     author='Open Data Services',
     author_email='code@opendataservices.coop',
     package_dir = {'': 'modules'},
-    py_modules=['taglifter', 'settings', 'cove_resourceprojects'],
+    py_modules=['taglifter', 'settings', 'urls', 'urls_multi', 'cove_resourceprojects'],
     url='https://github.com/NRGI/resource-projects-etl',
     description='',
     classifiers=[

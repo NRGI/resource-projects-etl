@@ -1,4 +1,4 @@
--e git+https://github.com/OpenDataServices/cove.git@ccd039c22836a4abc150dd8ed5e3a1493f651fcb#egg=cove
+-e git+https://github.com/OpenDataServices/cove.git@367e93e2293b0051ce65bd5377e3e5c3a1dd7593#egg=cove
 -e git+https://github.com/OpenDataServices/flatten-tool.git@61d8404b444f10384363cde1cad542a0d04af004#egg=flattentool
 -r requirements_taglifter.txt
 gunicorn==19.3.0
