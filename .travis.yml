@@ -7,7 +7,7 @@ services:
     - docker
 
 before_install:
-    - docker pull opendataservices/resource-projects-etl
+    - docker pull opendataservices/resource-projects-etl:${TRAVIS_TAG:-$TRAVIS_BRANCH}
     - docker build -t opendataservices/resource-projects-etl .
     - docker run -p 127.0.0.1:8000:80 opendataservices/resource-projects-etl
     - pip install -r requirements_test.txt
