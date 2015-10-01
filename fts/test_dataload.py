@@ -43,15 +43,25 @@ def test_humanize_naturaltime(browser, source_filename, prefix, expected_text, c
     browser.find_element_by_css_selector("button.btn.btn-default.fetch").click()
     assert 'now' in browser.find_element_by_tag_name('body').text
     #Click the convert button
-    #browser.find_element_by_css_selector("button.btn.btn-default.convert").click()
+    browser.find_element_by_css_selector("button.btn.btn-default.convert").click()
+    assert 'now' in browser.find_element_by_tag_name('body').text
+
     #Click the Push to Staging button
-    #browser.find_element_by_css_selector("button.btn.btn-default.staging-push").click()
+    browser.find_element_by_css_selector("button.btn.btn-default.staging").click()
+    assert 'now' in browser.find_element_by_tag_name('body').text
+
     #Click the Remove from Staging button
-    #browser.find_element_by_css_selector("button.btn.btn-default.staging-remove").click()
+    browser.find_element_by_css_selector("button.btn.btn-default.rm_staging").click()
+    assert 'now' in browser.find_element_by_tag_name('body').text
+
     #Click the Push to Live button
-    #browser.find_element_by_css_selector("button.btn.btn-default.staging-push").click()
+    browser.find_element_by_css_selector("button.btn.btn-default.live").click()
+    assert 'now' in browser.find_element_by_tag_name('body').text
+
     #Click the Remove from Live button
-    #browser.find_element_by_css_selector("button.btn.btn-default.staging-remove").click()
+    browser.find_element_by_css_selector("button.btn.btn-default.rm_staging").click()
+    assert 'now' in browser.find_element_by_tag_name('body').text
+
     browser.get(server_url + prefix + 'dataload/')
     assert 'now' in browser.find_element_by_tag_name('body').text or \
         'second ago' in browser.find_element_by_tag_name('body').text or \

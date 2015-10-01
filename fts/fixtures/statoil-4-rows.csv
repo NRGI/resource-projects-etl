@@ -1,0 +1,5 @@
+#country,#project,#project+company,#project+company+isOperator,#project+companyPayment+year,#project+companyPayment+type,#project+companyPayment+currency,#project+companyPayment+value
+Norway,Statoil Petroleum AS,StatOil,Y,2014,Taxes,NOK,8.86348E10
+Norway,Statoil Petroleum AS,StatOil,Y,2014,Total,NOK,8.86348E10
+Angola,Block 15,StatOil,,2014,Host government entitlements,NOK,9.1875E9
+Angola,Block 15,StatOil,,2014,Host government entitlements,MMBOE,14000000
