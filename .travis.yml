@@ -8,10 +8,6 @@ services:
     - docker
 
 before_install:
-    - sudo apt-get update
-    - sudo apt-get install xvfb firefox
-    - "export DISPLAY=:99.0"
-    - "sh -e /etc/init.d/xvfb start"
     - docker pull opendataservices/resource-projects-etl || true
     - docker pull opendataservices/resource-projects-etl:${TRAVIS_TAG:-$TRAVIS_BRANCH} || true
     - docker build -t opendataservices/resource-projects-etl .
@@ -19,6 +15,10 @@ before_install:
     - sudo service docker restart ; sleep 10
     - docker run -d -p 127.0.0.1:8890:8890 --name virtuoso caprenter/automated-build-virtuoso
     - docker run -d -p 127.0.0.1:8000:80 --link virtuoso:virtuoso -e DBA_PASS=dba opendataservices/resource-projects-etl
+    - sudo apt-get update
+    - sudo apt-get install xvfb firefox
+    - "export DISPLAY=:99.0"
+    - "sh -e /etc/init.d/xvfb start"
 
 install:
     - pip install -r requirements_test.txt
