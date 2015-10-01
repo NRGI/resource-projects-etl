@@ -12,7 +12,8 @@ before_install:
     - sudo apt-get install xvfb firefox
     - "export DISPLAY=:99.0"
     - "sh -e /etc/init.d/xvfb start"
-    - docker pull opendataservices/resource-projects-etl:${TRAVIS_TAG:-$TRAVIS_BRANCH}
+    - docker pull opendataservices/resource-projects-etl || true
+    - docker pull opendataservices/resource-projects-etl:${TRAVIS_TAG:-$TRAVIS_BRANCH} || true
     - docker build -t opendataservices/resource-projects-etl .
 #    https://github.com/travis-ci/travis-ci/issues/4778
     - sudo service docker restart ; sleep 10
