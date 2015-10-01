@@ -1,0 +1,30 @@
+sudo: required
+language: python
+
+python:
+  - "3.4"
+
+services:
+    - docker
+
+before_install:
+    - sudo apt-get update
+    - sudo apt-get install xvfb firefox
+    - "export DISPLAY=:99.0"
+    - "sh -e /etc/init.d/xvfb start"
+    - docker pull opendataservices/resource-projects-etl:${TRAVIS_TAG:-$TRAVIS_BRANCH}
+    - docker build -t opendataservices/resource-projects-etl .
+#    https://github.com/travis-ci/travis-ci/issues/4778
+    - sudo service docker restart ; sleep 10
+    - docker run -p 127.0.0.1:8000:80 -d opendataservices/resource-projects-etl
+
+install:
+    - pip install -r requirements_test.txt
+
+script:
+    - SERVER_URL=http://localhost:8000 py.test fts
+
+after_success:
+    - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+    - docker push opendataservices/resource-projects-etl
+    - if [[ $TRAVIS_PULL_REQUEST -eq "false" ]]; then docker tag opendataservices/resource-projects-etl opendataservices/resource-projects-etl:${TRAVIS_TAG:-$TRAVIS_BRANCH}; docker push opendataservices/resource-projects-etl:${TRAVIS_TAG:-$TRAVIS_BRANCH}; fi

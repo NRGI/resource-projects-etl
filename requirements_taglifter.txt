@@ -1,0 +1,8 @@
+pandas==0.16.2
+rdflib==4.2.1
+countrycode==0.2
+
+numpy==1.9.3
+pyparsing==2.0.3
+isodate==0.5.4
+python-dateutil==2.4.2
