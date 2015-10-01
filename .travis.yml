@@ -8,6 +8,8 @@ services:
     - docker
 
 before_install:
+    # Reset some timestamps to get more docker caching
+    - find ./ | grep -v .git | xargs touch -t 200001010000.00
     - docker pull opendataservices/resource-projects-etl || true
     - docker pull opendataservices/resource-projects-etl:${TRAVIS_TAG:-$TRAVIS_BRANCH} || true
     - docker build -t opendataservices/resource-projects-etl .
