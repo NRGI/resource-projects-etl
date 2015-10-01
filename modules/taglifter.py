@@ -317,7 +317,7 @@ class TagLifter:
             last_class = entity_class
             
             for key in row.keys():
-
+                last_entity= None ## TEST 
                 col_lang = lang
                 current_path = ""
 
@@ -325,6 +325,7 @@ class TagLifter:
                 
                 for n in range(len(tag_path)):
                     tag = tag_path[n]
+                    if self.debug: print("Processing tag [" + tag +"] in col ["+ key +"] on line ["+ str(line) +"]")
                     if (not tag.isdigit()) and len(tag) > 2: #If this is a digit, or a language tag we skip.
                     
                         current_path += "+"+tag if not current_path == "" else tag
@@ -345,8 +346,7 @@ class TagLifter:
                         if(not(row[key]=="")): # Only process when there is a value here
                             tag_type = self.get_tag_type(tag)
                             if tag_type == "Class":
-                                # ToDo: Check if it is in the entity cache
-                                # print current_path
+                                
                                 if current_path in entity_cache.keys():
                                     entity = entity_cache[current_path]['entity']
                                     entity_class =  entity_cache[current_path]['class']
@@ -369,49 +369,56 @@ class TagLifter:
                                     self.graph.add((entity,label_rel,Literal(row[current_path].strip(),lang=col_lang)))                                
                             
                                 # First check if we can make a relationship between this entity, and it's parent, or nearest neighbour
-                                if not last_entity == entity:
-                                    relationship = self.seek_class_relationship(last_entity,entity,row,country,lang,source_row)
+                                if last_entity and (not last_entity == entity):
+                                    if self.debug: print("Seeking relationship between "+ str(last_class) + " and "+ str(entity_class))
+                                    relationship = self.seek_class_relationship(last_entity,last_class,entity,entity_class,row,country,lang,source_row)
                                     if relationship:
+                                        if self.debug: print("Storing relationship in entity cache for " + current_path)
+                                        if self.debug: print(relationship)
                                         entity_cache[current_path] = relationship
+                                        
                                 last_entity = entity
                                 last_class = self.ontology[self.class_title(tag)]
-                            
-                                # Now check for other possible relationships: https://github.com/timgdavies/tag-lifter/issues/1
 
-                                possible_relationships = self.check_available_relationships(tag)
-
-                                ###Implementing https://github.com/timgdavies/tag-lifter/issues/1 (but very inefficiently!)
-                                # (2) Does a column exist at the next level of depth?
-                                for rel in possible_relationships:
-                                    search = current_path + "+" + rel[0].lower() + rel[1:]
-                                    for skey in row.keys():
-                                        if search in skey:
-                                            try:
-                                                possible_relationships.remove(rel) #If we're going to get to this relationship later, unset it. 
-                                            except ValueError:
-                                                pass # We might have already removed the element
-                                           
-                                # (3) Does a column exist at the parent level for these classes?
-                                # First, work out the parent node
-                                if n == 0:
-                                    parent = "#"
-                                else:
-                                    parent = "+".join(tag_path[0:n]) + "+"
-                            
-                                # Now iterate through remaining relationships NEEDS TESTING
-                                for rel in possible_relationships:
-                                    search = parent + rel[0].lower() + rel[1:]
-                                    #if not search in entity_cache.keys():
-                                    for skey in row.keys():
-                                        if search in skey:
-                                            try:
-                                                possible_relationships.remove(rel)
-                                                if search in entity_cache:
-                                                    relationship = self.seek_class_relationship(entity,entity_cache[search]['entity'],row,country,lang,source_row)
-                                                else: 
-                                                    print( search + " has not been created yet, so we can relate to it")
-                                            except ValueError:
-                                                pass   
+# Removed on 1st October 2015. Currently slowing things down - and not adding much if templates are constructed well
+# 
+# ToDo: Re-implement, so that relationships with neighbouring classes are made
+#
+#                               # Now check for other possible relationships: https://github.com/timgdavies/tag-lifter/issues/1
+#                               possible_relationships = self.check_available_relationships(tag)
+#
+#                               ###Implementing https://github.com/timgdavies/tag-lifter/issues/1 (but very inefficiently!)
+#                               # (2) Does a column exist at the next level of depth?
+#                               for rel in possible_relationships:
+#                                   search = current_path + "+" + rel[0].lower() + rel[1:]
+#                                   for skey in row.keys():
+#                                       if search in skey:
+#                                           try:
+#                                               possible_relationships.remove(rel) #If we're going to get to this relationship later, unset it. 
+#                                           except ValueError:
+#                                               pass # We might have already removed the element
+#                                          
+#                               # (3) Does a column exist at the parent level for these classes?
+#                               # First, work out the parent node
+#                               if n == 0:
+#                                   parent = "#"
+#                               else:
+#                                   parent = "+".join(tag_path[0:n]) + "+"
+#                           
+#                               # Now iterate through remaining relationships NEEDS TESTING
+#                               for rel in possible_relationships:
+#                                   search = parent + rel[0].lower() + rel[1:]
+#                                   #if not search in entity_cache.keys():
+#                                   for skey in row.keys():
+#                                       if search in skey:
+#                                           try:
+#                                               possible_relationships.remove(rel)
+#                                               if search in entity_cache:
+#                                                   relationship = self.seek_class_relationship(entity,entity_cache[search]['entity'],row,country,lang,source_row)
+#                                               else: 
+#                                                   print( search + " has not been created yet, so we can't relate to it")
+#                                           except ValueError:
+#                                               pass   
                             
                                 # (1) Is the entry already created
                             
@@ -427,7 +434,9 @@ class TagLifter:
                                     print( "Data properties can only be qualified by language tags. " + key + " is an invalid tag.")
                                 else:
                                     last_path = "+".join(tag_path[:-1])
+                                    if self.debug: print("Last Path is " + last_path)
                                     try: 
+                                        if self.debug: print("Checking for step of last-path: " + last_path)
                                         step = entity_cache[last_path]['step']
                                         step_class = entity_cache[last_path]['step_class']
                                     except KeyError:
@@ -438,15 +447,18 @@ class TagLifter:
                                     # 1. Can it be attached to the class;
                                     # 2. If not, can it be attached to the intermediary (found in the entity cache for the last path?)
                                     # 3. What typing do we need to provide? 
-                            
+                                    
+
+                                    
                                     if self.add_data_property(entity,entity_class,self.ontology[tag],row[key]):
-                                        pass
+                                        if self.debug: print("Added property "+ tag + " to " + str(entity))
                                     elif step and self.add_data_property(step,step_class,self.ontology[tag],row[key]):
-                                        pass
+                                        if self.debug: print ("Added property " + tag + " to " + str(step))
                                     else:
-                                        if self.allow_extra_properties:
-                                            self.graph.add((last_entity,self.ontology["misc/"+tag],Literal(row[key]))) 
-                           
+                                         if self.allow_extra_properties:
+                                             self.graph.add((entity,self.ontology["misc/"+tag],Literal(row[key]))) 
+                                             if self.debug: print("Added extra property misc/" + tag + " to " + str(entity))
+           
     def check_available_relationships(self,source):
           """
           Check what object relationships the current class can stand in, and return a list.
@@ -545,6 +557,7 @@ class TagLifter:
                     value = locale.atoi(str(value))
                 except ValueError:
                     value = value
+                
             self.graph.add((subj,predicate,Literal(value)))
             return True
         else:
@@ -553,7 +566,7 @@ class TagLifter:
   
         
 
-    def seek_class_relationship(self,source,target,row,country,lang,source_row):
+    def seek_class_relationship(self,source,source_class,target,target_class,row,country,lang,source_row):
         """
         Given two classes, this routine aims to find either a direct relationship that can be made between them,
         or an indirect (one step removed) relationship that can be made.
@@ -565,14 +578,15 @@ class TagLifter:
         At present, the sparql only handles for owl:someValuesFrom - (ToDo: Extend this to include owl:allValuesFrom)
         
         """
+        if self.debug: print(str(source_class) + " -----> " + str(target_class))
+        if self.debug: print(str(source) + " -----> " + str(target))
         if not source == target:
             cache_key = str(source) + "_"+ str(target)
             if cache_key in self.relationship_cache.keys():
                 return self.relationship_cache[cache_key]        
-        
-            source_class = self.graph.value(source, RDF.type)
-            target_class = self.graph.value(target, RDF.type)
-        
+            
+
+            
             rt_cache_key = str(source_class)+"_"+str(target_class)
             if rt_cache_key in self.relationship_cache.keys():
                 relationships = self.relationship_cache[rt_cache_key]
@@ -635,6 +649,7 @@ class TagLifter:
                 self.graph.add((source,URIRef(rel),target))
                 self.add_inverse(source,rel,target)
                 self.relationship_cache[cache_key] = {"entity":target,"class":target_class}
+                if self.debug: print("Found direct relationship between " + str(source) + " and " + str(target))
                 return self.relationship_cache[cache_key] 
         
             for rel in relationships['indirect']:
@@ -651,6 +666,7 @@ class TagLifter:
                 self.add_inverse(source,rel['p1'],entity) # We add the inverse relationships also
                 self.graph.add((entity,rel['p2'],target))
                 self.add_inverse(entity,rel['p2'],target) # We add the inverse relationships also
+                if self.debug: print("Found indirect relationship between " + str(source) + " and " + str(target))
                 self.relationship_cache[cache_key] = {"entity":target,"class":target_class,"step":entity,"step_class":rel['t1']}
                 return self.relationship_cache[cache_key]
 
@@ -671,6 +687,7 @@ class TagLifter:
         
 
     def __init__(self, ontology = None, source = None, base = "http://localhost/data/",source_meta = None,debug=True):
+        self.debug = True
         self.source_meta = source_meta
         self.debug = debug
         self.country_cache = {}
