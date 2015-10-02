@@ -10,7 +10,7 @@ import urllib.parse
 
 
 def fetch(dataset):
-    pass
+    dataset.supplied_data.download()
 
 
 def convert(dataset):
