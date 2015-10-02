@@ -30,6 +30,8 @@ COPY modules ./modules
 COPY setup.py ./
 RUN python3 setup.py install
 
+RUN mkdir db
+ENV DB_NAME /usr/src/resource-projects-etl/db/db.sqlite
 ENV DJANGO_SETTINGS_MODULE settings
 
 RUN manage.py migrate --noinput
