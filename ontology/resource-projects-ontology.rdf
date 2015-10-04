@@ -179,6 +179,17 @@ For example, if a company owns a stake in a project, then:
     
 
 
+    <!-- http://resourceprojects.org/def/relatedLineItem -->
+
+    <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/relatedLineItem">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/CompanyPayment"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/GovernmentReceipt"/>
+        <rdfs:range rdf:resource="http://resourceprojects.org/def/ReportLineItem"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Transaction"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- http://resourceprojects.org/def/relatedProject -->
 
     <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/relatedProject">
@@ -427,6 +438,16 @@ See https://en.wikipedia.org/wiki/ISO_4217 for a list of codes. </rdfs:comment>
     
 
 
+    <!-- http://resourceprojects.org/def/openCorporatesURL -->
+
+    <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/openCorporatesURL">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Company"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Group"/>
+        <rdfs:range rdf:resource="&xsd;anyURI"/>
+    </owl:DatatypeProperty>
+    
+
+
     <!-- http://resourceprojects.org/def/paymentLevel -->
 
     <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/paymentLevel">
@@ -592,6 +613,16 @@ unknown -</rdfs:comment>
     
 
 
+    <!-- http://resourceprojects.org/def/website -->
+
+    <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/website">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Company"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Group"/>
+        <rdfs:range rdf:resource="&xsd;anyURI"/>
+    </owl:DatatypeProperty>
+    
+
+
     <!-- http://resourceprojects.org/def/year -->
 
     <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/year">
@@ -650,6 +681,12 @@ Government owned companies are still represented using Company.
 
     <owl:Class rdf:about="http://resourceprojects.org/def/CompanyPayment">
         <rdfs:subClassOf rdf:resource="http://resourceprojects.org/def/Transaction"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/relatedLineItem"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/ReportLineItem"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://resourceprojects.org/def/payer"/>
@@ -757,6 +794,12 @@ Government owned companies are still represented using Company.
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://resourceprojects.org/def/paymentType"/>
                 <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/PaymentType"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/relatedLineItem"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/ReportLineItem"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
