@@ -400,6 +400,8 @@ See https://en.wikipedia.org/wiki/ISO_4217 for a list of codes. </rdfs:comment>
     <!-- http://resourceprojects.org/def/lat -->
 
     <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/lat">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Country"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Location"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Site"/>
         <rdfs:range rdf:resource="&xsd;decimal"/>
     </owl:DatatypeProperty>
@@ -415,6 +417,8 @@ See https://en.wikipedia.org/wiki/ISO_4217 for a list of codes. </rdfs:comment>
     <!-- http://resourceprojects.org/def/long -->
 
     <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/long">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Country"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Location"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Site"/>
         <rdfs:range rdf:resource="&xsd;decimal"/>
         <rdfs:subPropertyOf rdf:resource="&owl;topDataProperty"/>

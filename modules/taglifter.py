@@ -39,7 +39,7 @@ class TagLifter:
     
     def load_data(self,source):
            """Load data from a CSV file"""
-           self.source = pandas.read_csv(source)
+           self.source = pandas.read_csv(source, sep=',',error_bad_lines=False)
            self.map_tags()
 
 
@@ -170,7 +170,7 @@ class TagLifter:
     
     def generate_identifier(self,row,path,entity_type,country = "xx",lang="en"):
         #1. Check if this entity already has an identifier given in an +identifier column
-        # E.g, if path is #project+country, look for #project+company+identifier
+        # E.g, if path is #project+company, look for #project+company+identifier
         if path + "+identifier" in row.keys():
             if not row[path + "+identifier"].strip() == "":
                 return urllib.parse.quote(row[path + "+identifier"].strip(),safe='/')

@@ -1,5 +1,8 @@
 cd process/google-docs-reader/
 
+echo "Country Data"
+python transform-from-gdocs.py https://docs.google.com/spreadsheets/d/1JeQbeXQacUJWNR2nPesGDQb9BJGHhVvri_Nk8zxj1Mg/edit#gid=0 countrydata
+
 echo "Angola"
 python transform-from-gdocs.py https://docs.google.com/spreadsheets/d/1j9IDzCxCd2a70viGa8UejqWfxJDrUS87u7ROl8p8Hgc/edit#gid=1333644202 angola
 
@@ -23,3 +26,4 @@ python transform-from-gdocs.py https://docs.google.com/spreadsheets/d/1_A02orMgp
 
 echo "Mali"
 python transform-from-gdocs.py https://docs.google.com/spreadsheets/d/1bdDzInl_sn6TIbAuSF49b3flzbdJHvuSOdskmByaInE/edit#gid=141760938 mali
+
