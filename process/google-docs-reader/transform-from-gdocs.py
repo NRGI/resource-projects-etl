@@ -10,6 +10,7 @@ import requests
 
 tl = TagLifter(ontology = "../../ontology/resource-projects-ontology.rdf",base="http://resourceprojects.org/",source_meta={})
 
+
 gdoc = str(sys.argv[1])
 output = str(sys.argv[2])
 result = re.search("([-\w]{25,})", gdoc)
@@ -27,6 +28,7 @@ for entry in sheetjson['feed']['entry']:
             tl.source_meta = {"sheet":entry['title']['$t']}
             tl.load_data(link['href'])
             tl.build_graph()
+
 
 tl.graph.serialize(format='turtle',destination="../../data/"+output +".ttl")
                 
