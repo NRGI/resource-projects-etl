@@ -99,7 +99,7 @@ class TagLifter:
         if path + "+identifier" in row.keys():
             country = row[path + '+identifier']
             if(country):
-                return country.lower()
+                return country.upper()
             
         if (len(country) < 2) and (path in row.keys()):
             if row.get(path,"xx") in self.country_cache.keys():
@@ -117,7 +117,7 @@ class TagLifter:
             else:
                 country = "unknown"
 
-        return country.lower()
+        return country.upper()
     
     # ToDo - refactor in future 
     def get_country_code_from_name(self,name):
@@ -126,12 +126,12 @@ class TagLifter:
         except KeyError:
             country = countrycode(codes=[name],origin='country_name',target="iso2c")[0]
             if(len(country)==2):
-                self.country_cache[name] = country
+                self.country_cache[name] = country.upper()
             else:
                 country = random_string()
-                self.country_cache[name] = country
+                self.country_cache[name] = country.upper()
         
-        return country.lower()
+        return country.upper()
         
     def get_language(self,row):
         lang = row.get("#language",default=self.default_language)
@@ -392,7 +392,7 @@ class TagLifter:
 
                                     # Now check for other possible relationships: https://github.com/timgdavies/tag-lifter/issues/1
                                     possible_relationships = self.check_available_relationships(tag)
-                                
+
                                     ###Implementing https://github.com/timgdavies/tag-lifter/issues/1 (but very inefficiently!)
                                     # (2) Does a column exist at the next level of depth?
                                     for rel in possible_relationships:
@@ -421,6 +421,7 @@ class TagLifter:
                                                     possible_relationships.remove(rel)
                                                     if search in entity_cache:
                                                         relationship = self.seek_class_relationship(entity,entity_class,entity_cache[search]['entity'],entity_cache[search]['class'],row,country,lang,source_row)
+                                                        inverse_relationship = self.seek_class_relationship(entity_cache[search]['entity'],entity_cache[search]['class'],entity,entity_class,row,country,lang,source_row)
                                                     else: 
                                                         print( search + " has not been created yet, so we can't relate to it")
                                                 except ValueError:
@@ -459,6 +460,9 @@ class TagLifter:
                                              if "skos:" in tag: # We are dealing with a skos tag
                                                 tag = tag.split(":")[1]
                                                 self.graph.add((entity,SKOS[tag],Literal(row[key],lang=col_lang))) 
+                                             elif "foaf:" in tag: # We are dealing with a skos tag
+                                                    tag = tag.split(":")[1]
+                                                    self.graph.add((entity,FOAF[tag],Literal(row[key],lang=col_lang)))
                                              else:
                                                  if self.allow_extra_properties:
                                                      self.graph.add((entity,self.ontology["misc/"+tag],Literal(row[key]))) 
@@ -478,33 +482,44 @@ class TagLifter:
               PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
               SELECT DISTINCT ?t1 ?t2
               WHERE { 
-                ?o  a owl:Class. 
+                ?o a owl:Class. 
                 FILTER(?o = <%s>)
-                {  
-                  ?o rdfs:subClassOf+ ?restriction.
-                  ?restriction a owl:Restriction. 
-                  ?restriction owl:onProperty ?p1.
-                  {
-                    {
-                      ?restriction owl:someValuesFrom ?t1.
-                    } UNION {  
-                      ?restriction owl:someValuesFrom ?restrictionClass.
-                      ?t1 rdfs:subClassOf+ ?restrictionClass.
+                {
+                   ?t1 rdfs:subClassOf+ ?restriction.
+                       ?restriction a owl:Restriction. 
+                       {
+                         ?restriction owl:someValuesFrom ?o.
+                       } UNION {
+                         ?restriction owl:someValuesFrom ?restrictionClass.
+                         ?o rdfs:subClassOf+ ?restrictionClass.
+                       }
+
+                } UNION
+                {
+                    {  
+                      ?o rdfs:subClassOf+ ?restriction.
+                      ?restriction a owl:Restriction. 
+                      {
+                        {
+                          ?restriction owl:someValuesFrom ?t1.
+                        } UNION {  
+                          ?restriction owl:someValuesFrom ?restrictionClass.
+                          ?t1 rdfs:subClassOf+ ?restrictionClass.
+                        }
+                      }
                     }
-                  }
-                }
-                OPTIONAL {
-                  ?t1 rdfs:subClassOf+ ?restriction2.
-                  ?restriction2 a owl:Restriction.
-                  ?restriction2 owl:onProperty ?p2.
-                  {
-                    {
-                       ?restriction2 owl:someValuesFrom ?t2.
-                    } UNION {
-                       ?restriction2 owl:someValuesFrom ?restriction2class.
-                       ?t2 rdfs:subClassOf+ ?restriction2class.
+                    OPTIONAL {
+                      ?t1 rdfs:subClassOf+ ?restriction2.
+                      ?restriction2 a owl:Restriction.
+                      {
+                        {
+                           ?restriction2 owl:someValuesFrom ?t2.
+                        } UNION {
+                           ?restriction2 owl:someValuesFrom ?restriction2class.
+                           ?t2 rdfs:subClassOf+ ?restriction2class.
+                        }
+                      }
                     }
-                  }
                 }
               }"""%(source_class)
               rels = []
@@ -543,7 +558,7 @@ class TagLifter:
         We rely on Pandas to cast some values right now...
         
         """
-        
+        value = value.strip()
         if ((predicate,RDFS.domain,subj_class)) in self.onto:
             predicate_range = self.onto.value(predicate,RDFS.range)
             if predicate_range == XSD.dateTime:
@@ -551,12 +566,10 @@ class TagLifter:
             elif predicate_range ==XSD.boolean:
                 value = True if value else False ## ToDo - improve the handling of Booleans
             elif predicate_range ==XSD.float:
-              #  value = str(value).translate(None,['1','2','3','4','5','7','8','9','0','.'])  # ToDo - set-up better replacemnt for errange % signs etc.
-                value = locale.atoi(re.sub("[^\d\.]", "", value))
-                #try:
-                #    value = locale.atof(str(value))
-                #except ValueError:
-                #    value = value
+                try:
+                    value = locale.atoi(re.sub("[^\d\.]", "", value))
+                except ValueError:
+                    value = value
             elif predicate_range ==XSD.integer:
               #  value = str(value).translate(None,['1','2','3','4','5','7','8','9','0','.'])
                 try:
@@ -584,9 +597,10 @@ class TagLifter:
         At present, the sparql only handles for owl:someValuesFrom - (ToDo: Extend this to include owl:allValuesFrom)
         
         """
-        if self.debug: print(str(source_class) + " -----> " + str(target_class))
-        if self.debug: print(str(source) + " -----> " + str(target))
         if not source == target:
+            if self.debug: print(str(source_class) + " -----> " + str(target_class))
+            if self.debug: print(str(source) + " -----> " + str(target))
+            
             cache_key = str(source) + "_"+ str(target)
             if cache_key in self.relationship_cache.keys():
                 return self.relationship_cache[cache_key]        
