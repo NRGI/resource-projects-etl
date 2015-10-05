@@ -1,5 +1,6 @@
 py==1.4.28
 pytest==2.7.1
+requests==2.7.0
 
 # selenium
 selenium==2.46.0

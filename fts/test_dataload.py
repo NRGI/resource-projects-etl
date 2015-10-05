@@ -2,6 +2,7 @@ import pytest
 from selenium import webdriver
 import os
 import time
+import requests
 
 
 server_url = os.environ['SERVER_URL']
@@ -15,6 +16,18 @@ def browser(request):
     return browser
 
 
+def test_googledoc_input(browser):
+    source_url = 'https://docs.google.com/spreadsheets/d/1lZBVe6TGfrPYtaP4bqP9OZ0WG26vh_jTzOOm1h2Qdc4/edit#gid=0'
+
+    browser.get(server_url + prefix)
+    browser.find_element_by_id('id_source_url').send_keys(source_url)
+    browser.find_element_by_css_selector("#fetchURL > div.form-group > button.btn.btn-primary").click()
+
+    browser.find_element_by_css_selector("button.btn.btn-default.convert").click()
+    ttl_href = browser.find_element_by_link_text('Outputted TTL').get_attribute('href')
+    assert 'Block 15' in requests.get(ttl_href).text
+
+
 def test_humanize_naturaltime(browser):
     '''
       This test loads a file from a url into the resourceprojects interface.
@@ -26,8 +39,6 @@ def test_humanize_naturaltime(browser):
     source_url = 'https://raw.githubusercontent.com/NRGI/resource-projects-etl/ee55c2956d23ebfc7a71cb1994a149d966a3c2a7/fts/fixtures/statoil-4-rows.csv'
 
     browser.get(server_url + prefix)
-    browser.find_element_by_partial_link_text('Link').click()
-    time.sleep(0.5)
     browser.find_element_by_id('id_source_url').send_keys(source_url)
     browser.find_element_by_css_selector("#fetchURL > div.form-group > button.btn.btn-primary").click()
 

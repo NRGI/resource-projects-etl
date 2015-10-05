@@ -6,6 +6,7 @@ from functools import partial
 #from requests.auth import HTTPDigestAuth
 import subprocess
 import os
+import json
 import urllib.parse
 
 
@@ -14,13 +15,27 @@ def fetch(dataset):
 
 
 def convert(dataset):
+    if dataset.supplied_data.is_google_doc():
+        main_source = None
+    else:
+        main_source = dataset.supplied_data.original_file.file.name
+
     tl = TagLifter(
         ontology="ontology/resource-projects-ontology.rdf",
-        source=dataset.supplied_data.original_file.file.name,
+        source=main_source,
         base="http://resourceprojects.org/",
-        source_meta={"author": "TODO", "Source_Type": "official", "Converted": "Today"}
+        source_meta={}
     )
-    tl.build_graph()
+
+    if dataset.supplied_data.is_google_doc():
+        with open(dataset.supplied_data.original_file.file.name) as fp:
+            for entry in json.load(fp)['feed']['entry']:
+                tl.source_meta = {"sheet": entry['title']['$t']}
+                tl.load_data(os.path.join(dataset.supplied_data.upload_dir(), 'googledoc', entry['title']['$t']))
+                tl.build_graph()
+    else:
+        tl.build_graph()
+
     tl.graph.serialize(
         format='turtle',
         destination=os.path.join(dataset.supplied_data.upload_dir(), 'output.ttl')
@@ -86,6 +101,11 @@ def delete_from_virtuoso(dataset, staging):
     ])
 
 
+def outputted_ttl(dataset):
+     return dataset.supplied_data.upload_url() + 'output.ttl'
+   
+
+
 PROCESSES = OrderedDict([
     ('fetch', {
         'name': 'Fetched',
@@ -97,7 +117,8 @@ PROCESSES = OrderedDict([
     ('convert', {
         'name': 'Converted',
         'action_name': 'Convert',
-        'more_info_name': 'Conversion messages',
+        'more_info_name': 'Outputted TTL',
+        'more_info_link': outputted_ttl,
         'depends': 'fetch',
         'function': convert,
         'main': True
