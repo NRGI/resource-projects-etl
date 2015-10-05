@@ -22,6 +22,29 @@
     <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
     //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://resourceprojects.org/def/captureProvenance -->
+
+    <owl:AnnotationProperty rdf:about="http://resourceprojects.org/def/captureProvenance"/>
+    
+
+
+    <!-- http://resourceprojects.org/def/identifierPattern -->
+
+    <owl:AnnotationProperty rdf:about="http://resourceprojects.org/def/identifierPattern"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
     // Object Properties
     //
     ///////////////////////////////////////////////////////////////////////////////////////
@@ -30,11 +53,9 @@
     
 
 
-    <!-- http://resourceprojects.org/def/commodity -->
+    <!-- http://resourceprojects.org/def/concession -->
 
-    <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/commodity">
-        <rdfs:comment xml:lang="en">Relates a project, site or license to a commodity. </rdfs:comment>
-    </owl:ObjectProperty>
+    <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/concession"/>
     
 
 
@@ -47,13 +68,24 @@
     
 
 
+    <!-- http://resourceprojects.org/def/hasCommodity -->
+
+    <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/hasCommodity">
+        <rdfs:range rdf:resource="http://resourceprojects.org/def/Commodity"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Production"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Project"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Site"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- http://resourceprojects.org/def/hasLocation -->
 
     <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/hasLocation">
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Company"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Concession"/>
         <rdfs:range rdf:resource="http://resourceprojects.org/def/Country"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Group"/>
-        <rdfs:domain rdf:resource="http://resourceprojects.org/def/License"/>
         <rdfs:range rdf:resource="http://resourceprojects.org/def/Location"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Organization"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Project"/>
@@ -80,24 +112,17 @@ For example, if a company owns a stake in a project, then:
     <!-- http://resourceprojects.org/def/hasStakeholder -->
 
     <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/hasStakeholder">
-        <rdfs:comment xml:lang="en">Relates a stake to the organization or other entity holding that stake. </rdfs:comment>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Stake"/>
+        <owl:inverseOf rdf:resource="http://resourceprojects.org/def/holdsStake"/>
         <rdfs:subPropertyOf rdf:resource="http://resourceprojects.org/def/stakeholder"/>
     </owl:ObjectProperty>
     
 
 
-    <!-- http://resourceprojects.org/def/hasStakeholding -->
+    <!-- http://resourceprojects.org/def/holdsStake -->
 
-    <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/hasStakeholding">
-        <rdfs:comment xml:lang="en">Relates an entity to the stake it holds. 
-
-For example:
-
-&lt;Company&gt; hasStakeholding &lt;Stake&gt;.
-&lt;Stake&gt; isStakeIn &lt;Project&gt;.</rdfs:comment>
+    <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/holdsStake">
         <rdfs:range rdf:resource="http://resourceprojects.org/def/Stake"/>
-        <owl:inverseOf rdf:resource="http://resourceprojects.org/def/hasStakeholder"/>
         <rdfs:subPropertyOf rdf:resource="http://resourceprojects.org/def/stakeholding"/>
     </owl:ObjectProperty>
     
@@ -154,10 +179,26 @@ For example:
     
 
 
+    <!-- http://resourceprojects.org/def/relatedLineItem -->
+
+    <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/relatedLineItem">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/CompanyPayment"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/GovernmentReceipt"/>
+        <rdfs:range rdf:resource="http://resourceprojects.org/def/ReportLineItem"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Transaction"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- http://resourceprojects.org/def/relatedProject -->
 
     <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/relatedProject">
         <rdfs:comment xml:lang="en">Relates transactions and production statistics to projects. </rdfs:comment>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/CompanyPayment"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Contract"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/GovernmentReceipt"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Production"/>
+        <rdfs:range rdf:resource="http://resourceprojects.org/def/Project"/>
     </owl:ObjectProperty>
     
 
@@ -168,24 +209,33 @@ For example:
     
 
 
+    <!-- http://resourceprojects.org/def/sourceType -->
+
+    <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/sourceType">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Source"/>
+        <rdfs:range rdf:resource="http://resourceprojects.org/def/SourceType"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- http://resourceprojects.org/def/stakeholder -->
 
-    <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/stakeholder">
-        <rdf:type rdf:resource="&owl;TransitiveProperty"/>
-        <rdfs:comment xml:lang="en">Transitive parent property of hasStake and hasStakeholder.
-
-This makes it possible to query for all the ultimate stakeholders in a given entity. </rdfs:comment>
-    </owl:ObjectProperty>
+    <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/stakeholder"/>
     
 
 
     <!-- http://resourceprojects.org/def/stakeholding -->
 
-    <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/stakeholding">
-        <rdf:type rdf:resource="&owl;TransitiveProperty"/>
-        <rdfs:comment xml:lang="en">Transitive parent property of hasStakeholding and isStakeIn.
+    <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/stakeholding"/>
+    
 
-This makes it possible to query for all the ultimate stakeholdings of a given entity.</rdfs:comment>
+
+    <!-- http://resourceprojects.org/def/state -->
+
+    <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/state">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Project"/>
+        <rdfs:range rdf:resource="http://resourceprojects.org/def/Status"/>
+        <rdfs:subPropertyOf rdf:resource="&owl;topObjectProperty"/>
     </owl:ObjectProperty>
     
 
@@ -215,7 +265,6 @@ This makes it possible to query for all the ultimate stakeholdings of a given en
     <owl:DatatypeProperty rdf:about="http://purl.org/dc/elements/1.1/title">
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Commodity"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Company"/>
-        <rdfs:domain rdf:resource="http://resourceprojects.org/def/License"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Location"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Organization"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Project"/>
@@ -248,6 +297,16 @@ Valid values for this field are &apos;cash&apos;, &apos;accural&apos;, &apos;unk
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/CompanyPayment"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/GovernmentReceipt"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Transaction"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://resourceprojects.org/def/commodityType -->
+
+    <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/commodityType">
+        <rdfs:label>Commodity Type</rdfs:label>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Commodity"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
     </owl:DatatypeProperty>
     
 
@@ -292,10 +351,11 @@ See https://en.wikipedia.org/wiki/ISO_4217 for a list of codes. </rdfs:comment>
     <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/endDate">
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Company"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Contract"/>
-        <rdfs:domain rdf:resource="http://resourceprojects.org/def/License"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/GroupMembership"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Organization"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Project"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Site"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Status"/>
         <rdfs:subPropertyOf rdf:resource="http://resourceprojects.org/def/date"/>
         <rdfs:range rdf:resource="&xsd;dateTime"/>
     </owl:DatatypeProperty>
@@ -305,8 +365,25 @@ See https://en.wikipedia.org/wiki/ISO_4217 for a list of codes. </rdfs:comment>
     <!-- http://resourceprojects.org/def/identifier -->
 
     <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/identifier">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Commodity"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Company"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Concession"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Contract"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Country"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Group"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/GroupMembership"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Location"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Organization"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/PaymentType"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Project"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/ReportLineItem"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Site"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Source"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/SourceType"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Stake"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Statistics"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Status"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Transaction"/>
     </owl:DatatypeProperty>
     
 
@@ -323,6 +400,8 @@ See https://en.wikipedia.org/wiki/ISO_4217 for a list of codes. </rdfs:comment>
     <!-- http://resourceprojects.org/def/lat -->
 
     <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/lat">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Country"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Location"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Site"/>
         <rdfs:range rdf:resource="&xsd;decimal"/>
     </owl:DatatypeProperty>
@@ -331,15 +410,15 @@ See https://en.wikipedia.org/wiki/ISO_4217 for a list of codes. </rdfs:comment>
 
     <!-- http://resourceprojects.org/def/licenseType -->
 
-    <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/licenseType">
-        <rdfs:domain rdf:resource="http://resourceprojects.org/def/License"/>
-    </owl:DatatypeProperty>
+    <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/licenseType"/>
     
 
 
-    <!-- http://resourceprojects.org/def/lng -->
+    <!-- http://resourceprojects.org/def/long -->
 
-    <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/lng">
+    <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/long">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Country"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Location"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Site"/>
         <rdfs:range rdf:resource="&xsd;decimal"/>
         <rdfs:subPropertyOf rdf:resource="&owl;topDataProperty"/>
@@ -351,9 +430,6 @@ See https://en.wikipedia.org/wiki/ISO_4217 for a list of codes. </rdfs:comment>
 
     <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/mbox">
         <rdfs:label xml:lang="en">Mailbox (e-mail address)</rdfs:label>
-        <rdfs:domain rdf:resource="http://resourceprojects.org/def/CEO"/>
-        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Contributor"/>
-        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Person"/>
     </owl:DatatypeProperty>
     
 
@@ -362,9 +438,16 @@ See https://en.wikipedia.org/wiki/ISO_4217 for a list of codes. </rdfs:comment>
 
     <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/name">
         <rdfs:label xml:lang="en">Name</rdfs:label>
-        <rdfs:domain rdf:resource="http://resourceprojects.org/def/CEO"/>
-        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Contributor"/>
-        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Person"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://resourceprojects.org/def/openCorporatesURL -->
+
+    <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/openCorporatesURL">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Company"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Group"/>
+        <rdfs:range rdf:resource="&xsd;anyURI"/>
     </owl:DatatypeProperty>
     
 
@@ -408,7 +491,6 @@ unknown -</rdfs:comment>
 
     <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/share">
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Stake"/>
-        <rdfs:range rdf:resource="&xsd;decimal"/>
     </owl:DatatypeProperty>
     
 
@@ -417,7 +499,6 @@ unknown -</rdfs:comment>
 
     <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/signatureDate">
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Contract"/>
-        <rdfs:domain rdf:resource="http://resourceprojects.org/def/License"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Project"/>
         <rdfs:subPropertyOf rdf:resource="http://resourceprojects.org/def/date"/>
         <rdfs:range rdf:resource="&xsd;dateTime"/>
@@ -440,7 +521,7 @@ unknown -</rdfs:comment>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Company"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Contract"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Country"/>
-        <rdfs:domain rdf:resource="http://resourceprojects.org/def/License"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/GroupMembership"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Location"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Organization"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Project"/>
@@ -453,25 +534,27 @@ unknown -</rdfs:comment>
     
 
 
-    <!-- http://resourceprojects.org/def/sourceType -->
-
-    <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/sourceType">
-        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Source"/>
-    </owl:DatatypeProperty>
-    
-
-
     <!-- http://resourceprojects.org/def/startDate -->
 
     <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/startDate">
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Company"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Contract"/>
-        <rdfs:domain rdf:resource="http://resourceprojects.org/def/License"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/GroupMembership"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Organization"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Project"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Site"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Status"/>
         <rdfs:subPropertyOf rdf:resource="http://resourceprojects.org/def/date"/>
         <rdfs:range rdf:resource="&xsd;dateTime"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://resourceprojects.org/def/statusType -->
+
+    <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/statusType">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Status"/>
+        <rdfs:range rdf:resource="&rdfs;Literal"/>
     </owl:DatatypeProperty>
     
 
@@ -479,8 +562,10 @@ unknown -</rdfs:comment>
     <!-- http://resourceprojects.org/def/trueAt -->
 
     <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/trueAt">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/GroupMembership"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Site"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Stake"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Status"/>
         <rdfs:subPropertyOf rdf:resource="http://resourceprojects.org/def/date"/>
         <rdfs:range rdf:resource="&xsd;dateTime"/>
     </owl:DatatypeProperty>
@@ -498,7 +583,16 @@ unknown -</rdfs:comment>
     <!-- http://resourceprojects.org/def/url -->
 
     <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/url">
-        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Contributor"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Source"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://resourceprojects.org/def/urlType -->
+
+    <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/urlType">
+        <rdfs:label xml:lang="en">URL Type</rdfs:label>
+        <rdfs:comment xml:lang="en">A description of what will be found by following this URL. </rdfs:comment>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Source"/>
     </owl:DatatypeProperty>
     
@@ -510,6 +604,7 @@ unknown -</rdfs:comment>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/CompanyPayment"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/GovernmentReceipt"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Transaction"/>
+        <rdfs:range rdf:resource="&xsd;float"/>
     </owl:DatatypeProperty>
     
 
@@ -522,11 +617,22 @@ unknown -</rdfs:comment>
     
 
 
+    <!-- http://resourceprojects.org/def/website -->
+
+    <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/website">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Company"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Group"/>
+        <rdfs:range rdf:resource="&xsd;anyURI"/>
+    </owl:DatatypeProperty>
+    
+
+
     <!-- http://resourceprojects.org/def/year -->
 
     <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/year">
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/CompanyPayment"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/GovernmentReceipt"/>
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/GroupMembership"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Production"/>
         <rdfs:subPropertyOf rdf:resource="http://resourceprojects.org/def/date"/>
         <rdfs:range rdf:resource="&xsd;integer"/>
@@ -545,29 +651,12 @@ unknown -</rdfs:comment>
     
 
 
-    <!-- http://resourceprojects.org/def/CEO -->
-
-    <owl:Class rdf:about="http://resourceprojects.org/def/CEO">
-        <rdfs:subClassOf rdf:resource="http://resourceprojects.org/def/Person"/>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/source"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-    </owl:Class>
-    
-
-
     <!-- http://resourceprojects.org/def/Commodity -->
 
     <owl:Class rdf:about="http://resourceprojects.org/def/Commodity">
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/source"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
+        <rdfs:comment rdf:datatype="&xsd;boolean">false</rdfs:comment>
+        <identifierPattern>{cleanstring}</identifierPattern>
+        <rdfs:comment xml:lang="en">The ResourceProjects.org repository focuses solely on non-renewable extractive resources. Projects are classified as either an ‘oil and gas’ or ‘mining’ project. These categories are then broken down into a list of commodities the project is producing or aims to produce. A project may have multiple commodities associated (ie. both oil and gas, or both gold and silver).</rdfs:comment>
     </owl:Class>
     
 
@@ -582,6 +671,8 @@ unknown -</rdfs:comment>
                 <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <captureProvenance rdf:datatype="&xsd;boolean">true</captureProvenance>
+        <identifierPattern>{random}</identifierPattern>
         <rdfs:comment xml:lang="en">Company is used to represent any kind of organization that can enter into transactions around a resource project, license, contract or site, with the exception of government parties, which are represented by GovernmentParty.
 
 Government owned companies are still represented using Company. 
@@ -596,20 +687,8 @@ Government owned companies are still represented using Company.
         <rdfs:subClassOf rdf:resource="http://resourceprojects.org/def/Transaction"/>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/payee"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Country"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/relatedProject"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Project"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/paymentType"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/PaymentType"/>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/relatedLineItem"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/ReportLineItem"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
@@ -630,6 +709,34 @@ Government owned companies are still represented using Company.
                 <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/GovernmentParty"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/payee"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Country"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/paymentType"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/PaymentType"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/relatedProject"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Project"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <captureProvenance rdf:datatype="&xsd;boolean">true</captureProvenance>
+        <identifierPattern>{country}/{random}</identifierPattern>
+    </owl:Class>
+    
+
+
+    <!-- http://resourceprojects.org/def/Concession -->
+
+    <owl:Class rdf:about="http://resourceprojects.org/def/Concession">
+        <identifierPattern xml:lang="en">{country}/{eyekey}-{suffix}</identifierPattern>
     </owl:Class>
     
 
@@ -637,35 +744,33 @@ Government owned companies are still represented using Company.
     <!-- http://resourceprojects.org/def/Contract -->
 
     <owl:Class rdf:about="http://resourceprojects.org/def/Contract">
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasStake"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Stake"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
+        <rdfs:label xml:lang="en">Contract (resource contract)</rdfs:label>
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://resourceprojects.org/def/source"/>
                 <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
             </owl:Restriction>
         </rdfs:subClassOf>
-    </owl:Class>
-    
-
-
-    <!-- http://resourceprojects.org/def/Contributor -->
-
-    <owl:Class rdf:about="http://resourceprojects.org/def/Contributor">
-        <rdfs:label xml:lang="en">Contributor</rdfs:label>
-        <rdfs:subClassOf rdf:resource="http://resourceprojects.org/def/Person"/>
-        <rdfs:comment xml:lang="en">Used to represent contributors to the ResourceProjects.org platform.</rdfs:comment>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasStake"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Stake"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <captureProvenance rdf:datatype="&xsd;boolean">true</captureProvenance>
+        <rdfs:comment xml:lang="en">Contract (resource contract): An agreement or set of legal terms granting a company the right to explore or extract a resource in a given area in return for paying to the government royalties, taxes or other consideration. Resource contracts are known in different countries by various terms, including lease, license, concession, block, mineral development agreement (MDA), and production sharing contract (PSC), among others. </rdfs:comment>
+        <identifierPattern>{country}/{eyekey}-{suffix}</identifierPattern>
     </owl:Class>
     
 
 
     <!-- http://resourceprojects.org/def/Country -->
 
-    <owl:Class rdf:about="http://resourceprojects.org/def/Country"/>
+    <owl:Class rdf:about="http://resourceprojects.org/def/Country">
+        <captureProvenance rdf:datatype="&xsd;boolean">false</captureProvenance>
+        <identifierPattern>{country-from-name}</identifierPattern>
+        <rdfs:comment xml:lang="en">Countries should be identified using their ISO 2-Digit country code.</rdfs:comment>
+    </owl:Class>
     
 
 
@@ -679,6 +784,8 @@ Government owned companies are still represented using Company.
                 <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <captureProvenance rdf:datatype="&xsd;boolean">true</captureProvenance>
+        <identifierPattern>{random}</identifierPattern>
     </owl:Class>
     
 
@@ -689,14 +796,32 @@ Government owned companies are still represented using Company.
         <rdfs:subClassOf rdf:resource="http://resourceprojects.org/def/Transaction"/>
         <rdfs:subClassOf>
             <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/paymentType"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/PaymentType"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/relatedLineItem"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/ReportLineItem"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
                 <owl:onProperty rdf:resource="http://resourceprojects.org/def/payee"/>
                 <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/GovernmentParty"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/paymentType"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/PaymentType"/>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/payee"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Country"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/source"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
@@ -711,18 +836,8 @@ Government owned companies are still represented using Company.
                 <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Project"/>
             </owl:Restriction>
         </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/source"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/payee"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Country"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
+        <captureProvenance rdf:datatype="&xsd;boolean">true</captureProvenance>
+        <identifierPattern>{country}/{random}</identifierPattern>
     </owl:Class>
     
 
@@ -730,11 +845,10 @@ Government owned companies are still represented using Company.
     <!-- http://resourceprojects.org/def/Group -->
 
     <owl:Class rdf:about="http://resourceprojects.org/def/Group">
-        <rdfs:subClassOf rdf:resource="http://resourceprojects.org/def/Organization"/>
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://resourceprojects.org/def/groupMember"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/GroupMember"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/GroupMembership"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
@@ -743,14 +857,17 @@ Government owned companies are still represented using Company.
                 <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <captureProvenance rdf:datatype="&xsd;boolean">true</captureProvenance>
         <rdfs:comment xml:lang="en">A Group consists of a collection of related companies - for example, a corporate grouping for the purpose of reporting data. </rdfs:comment>
+        <identifierPattern>{cleanstring}</identifierPattern>
     </owl:Class>
     
 
 
-    <!-- http://resourceprojects.org/def/GroupMember -->
+    <!-- http://resourceprojects.org/def/GroupMembership -->
 
-    <owl:Class rdf:about="http://resourceprojects.org/def/GroupMember">
+    <owl:Class rdf:about="http://resourceprojects.org/def/GroupMembership">
+        <rdfs:label>Group membership</rdfs:label>
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://resourceprojects.org/def/source"/>
@@ -763,26 +880,13 @@ Government owned companies are still represented using Company.
                 <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Company"/>
             </owl:Restriction>
         </rdfs:subClassOf>
-    </owl:Class>
-    
+        <captureProvenance rdf:datatype="&xsd;boolean">true</captureProvenance>
+        <rdfs:comment xml:lang="en">Companies are often members of wider corporate groupings.
 
+A group membership relates a company to it&apos;s corporate parents.
 
-    <!-- http://resourceprojects.org/def/License -->
-
-    <owl:Class rdf:about="http://resourceprojects.org/def/License">
-        <rdfs:subClassOf rdf:resource="http://resourceprojects.org/def/Contract"/>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/source"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasLocation"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Location"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
+GroupMemberships can have additional properties to indicate the nature of the membership, should this be required for more detailed analysis. For example, GroupMembership can have temporal information attached. </rdfs:comment>
+        <identifierPattern>{random}</identifierPattern>
     </owl:Class>
     
 
@@ -796,6 +900,8 @@ Government owned companies are still represented using Company.
                 <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <captureProvenance rdf:datatype="&xsd;boolean">true</captureProvenance>
+        <identifierPattern>{random}</identifierPattern>
     </owl:Class>
     
 
@@ -809,6 +915,14 @@ Government owned companies are still represented using Company.
                 <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/holdsStake"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Stake"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <captureProvenance rdf:datatype="&xsd;boolean">true</captureProvenance>
+        <identifierPattern>{random}</identifierPattern>
     </owl:Class>
     
 
@@ -817,6 +931,8 @@ Government owned companies are still represented using Company.
 
     <owl:Class rdf:about="http://resourceprojects.org/def/PaymentType">
         <rdfs:label xml:lang="en">Payment Type</rdfs:label>
+        <captureProvenance rdf:datatype="&xsd;boolean">true</captureProvenance>
+        <identifierPattern>{random}</identifierPattern>
         <rdfs:comment xml:lang="en">There are a variety of approaches for classifying extractives industry payments, including:
 
 (1) An extended version the IMF Global Finance Statistics Manual (GFSM) 2014 Revenue Classification used by the Extractives Industry Transparency Initiative (EITI) reporting templates. 
@@ -838,19 +954,6 @@ Sources:
     
 
 
-    <!-- http://resourceprojects.org/def/Person -->
-
-    <owl:Class rdf:about="http://resourceprojects.org/def/Person">
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/source"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-    </owl:Class>
-    
-
-
     <!-- http://resourceprojects.org/def/Production -->
 
     <owl:Class rdf:about="http://resourceprojects.org/def/Production">
@@ -861,6 +964,8 @@ Sources:
                 <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <captureProvenance rdf:datatype="&xsd;boolean">true</captureProvenance>
+        <identifierPattern>{country}/{random}</identifierPattern>
     </owl:Class>
     
 
@@ -868,16 +973,17 @@ Sources:
     <!-- http://resourceprojects.org/def/Project -->
 
     <owl:Class rdf:about="http://resourceprojects.org/def/Project">
+        <rdfs:label xml:lang="en">Project</rdfs:label>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasStake"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Stake"/>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/source"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasLocation"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Location"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Country"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
@@ -888,45 +994,20 @@ Sources:
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/commodity"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Commodity"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/source"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasLocation"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Country"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-    </owl:Class>
-    
-
-
-    <!-- http://resourceprojects.org/def/Site -->
-
-    <owl:Class rdf:about="http://resourceprojects.org/def/Site">
-        <rdfs:subClassOf>
-            <owl:Restriction>
                 <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasLocation"/>
                 <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Location"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/commodity"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Commodity"/>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/state"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Status"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasLocation"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Country"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Site"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
@@ -937,17 +1018,69 @@ Sources:
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/relatedProject"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Project"/>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasCommodity"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Commodity"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <captureProvenance rdf:datatype="&xsd;boolean">true</captureProvenance>
+        <identifierPattern>{country}/{eyekey}-{suffix}</identifierPattern>
+        <rdfs:comment xml:lang="en">Resource projects represent the physical, tangible presence of extractive operations in a country. </rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://resourceprojects.org/def/ReportLineItem -->
+
+    <owl:Class rdf:about="http://resourceprojects.org/def/ReportLineItem">
+        <captureProvenance rdf:datatype="&xsd;boolean">true</captureProvenance>
+        <identifierPattern>{random}</identifierPattern>
+    </owl:Class>
+    
+
+
+    <!-- http://resourceprojects.org/def/Site -->
+
+    <owl:Class rdf:about="http://resourceprojects.org/def/Site">
+        <rdfs:label xml:lang="en">Site</rdfs:label>
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://resourceprojects.org/def/source"/>
                 <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
             </owl:Restriction>
         </rdfs:subClassOf>
-        <rdfs:comment>Areas where resource exploration or extraction take place may be divided up into a number of distinct sites, often called &apos;Blocks&apos;. </rdfs:comment>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasCommodity"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Commodity"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/relatedProject"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Project"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasLocation"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Location"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasLocation"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Country"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <captureProvenance rdf:datatype="&xsd;boolean">true</captureProvenance>
+        <rdfs:comment xml:lang="en">There are a number of different kinds of sites. At present our data model does not distinguish these directly, and information about them will need to be inferred by looking at the nature of the projects attached to them.
+
+Block / License Area / Concession Area: Designated geographic areas over which resource extraction rights are granted. Multiple projects can coexist within a block / license area/ concession area, or a project can occupy multiple areas.
+
+Oil field: An area of land or seabed yielding oil, especially in amounts that justify commercial exploitation (Wikipedia). When oil fields are discovered, they are often given a name, sometimes following the name on the well with which the discovery was made. Oil projects may aim to recover oil from one or multiple connected fields.
+
+Mine site: Places or areas from which commercial minerals are or were removed by excavation from the Earth (USGS). A project would typically include one or multiple closely linked mine sites. </rdfs:comment>
+        <identifierPattern>{country}/{eyekey}-{suffix}</identifierPattern>
     </owl:Class>
     
 
@@ -957,10 +1090,21 @@ Sources:
     <owl:Class rdf:about="http://resourceprojects.org/def/Source">
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/wasAttributedTo"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Contributor"/>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/sourceType"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/SourceType"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <captureProvenance rdf:datatype="&xsd;boolean">false</captureProvenance>
+        <identifierPattern>{cleanstring}-{suffix}</identifierPattern>
+    </owl:Class>
+    
+
+
+    <!-- http://resourceprojects.org/def/SourceType -->
+
+    <owl:Class rdf:about="http://resourceprojects.org/def/SourceType">
+        <captureProvenance rdf:datatype="&xsd;boolean">false</captureProvenance>
+        <identifierPattern>{cleanstring}</identifierPattern>
     </owl:Class>
     
 
@@ -968,12 +1112,6 @@ Sources:
     <!-- http://resourceprojects.org/def/Stake -->
 
     <owl:Class rdf:about="http://resourceprojects.org/def/Stake">
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/isStakeIn"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Site"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://resourceprojects.org/def/source"/>
@@ -988,14 +1126,14 @@ Sources:
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/isStakeIn"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Company"/>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasStakeholder"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Organization"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://resourceprojects.org/def/isStakeIn"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/License"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Site"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
@@ -1004,12 +1142,8 @@ Sources:
                 <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Contract"/>
             </owl:Restriction>
         </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasStakeholder"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Organization"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
+        <captureProvenance rdf:datatype="&xsd;boolean">true</captureProvenance>
+        <identifierPattern>{random}</identifierPattern>
         <rdfs:comment xml:lang="en">A stakeholding represents certain interests of the Stakeholder in the object of the Stake. 
 
 A stake may relate to a company, project, license or contract. </rdfs:comment>
@@ -1026,6 +1160,18 @@ A stake may relate to a company, project, license or contract. </rdfs:comment>
                 <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <captureProvenance rdf:datatype="&xsd;boolean">true</captureProvenance>
+        <identifierPattern>{country}/{random}</identifierPattern>
+    </owl:Class>
+    
+
+
+    <!-- http://resourceprojects.org/def/Status -->
+
+    <owl:Class rdf:about="http://resourceprojects.org/def/Status">
+        <captureProvenance rdf:datatype="&xsd;boolean">false</captureProvenance>
+        <rdfs:comment xml:lang="en">A project can be in a number of states. Reports tell us the state of a project at a particular point in time, but often do not provide detailed information about when it entered or exited that state. </rdfs:comment>
+        <identifierPattern>{random}</identifierPattern>
     </owl:Class>
     
 
@@ -1045,6 +1191,8 @@ A stake may relate to a company, project, license or contract. </rdfs:comment>
                 <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <captureProvenance rdf:datatype="&xsd;boolean">true</captureProvenance>
+        <identifierPattern>{country}/{random}</identifierPattern>
     </owl:Class>
 </rdf:RDF>
 

@@ -39,7 +39,7 @@ class TagLifter:
     
     def load_data(self,source):
            """Load data from a CSV file"""
-           self.source = pandas.read_csv(source)
+           self.source = pandas.read_csv(source, sep=',',error_bad_lines=False)
            self.map_tags()
 
 
@@ -76,27 +76,31 @@ class TagLifter:
                 else:
                     new_key = self.clean_string(self.class_title(key))
                     mapping[key] = new_key[0].lower()+new_key[1:]
-            if tag_count > 3: # We assume we've found the tag row once we've got a row with more than 3 tags in
+            if tag_count > 2: # We assume we've found the tag row once we've got a row with more than 2 tags in
                 #Remove all the rows above
                 for rmrow in range(0,line+1):
                     data = data.drop(rmrow)
-                break         
+                break
 
-        if(tag_count < 3):
-            print( "No column tagging found in first 25 rows.")
+        if(tag_count < 2):
+            print( "No column tagging found in first 25 rows. Skipping sheet.")
+            self.skip_sheet = True
+            
         else:
             data = data.rename(columns=mapping)
+            self.skip_sheet = False
+            data = data.fillna("")
 
-        data = data.fillna("")
         self.map = data
     
     
     def get_country(self,row,path="#country",return_default = True):
         country = ""
-        if path + "+code" in row.keys():
-            country = row[path + '+code']
-            return country.lower()
-        
+        if path + "+identifier" in row.keys():
+            country = row[path + '+identifier']
+            if(country):
+                return country.upper()
+            
         if (len(country) < 2) and (path in row.keys()):
             if row.get(path,"xx") in self.country_cache.keys():
                 country = self.country_cache[row.get(path,"xx")]
@@ -113,7 +117,7 @@ class TagLifter:
             else:
                 country = "unknown"
 
-        return country.lower()
+        return country.upper()
     
     # ToDo - refactor in future 
     def get_country_code_from_name(self,name):
@@ -122,12 +126,12 @@ class TagLifter:
         except KeyError:
             country = countrycode(codes=[name],origin='country_name',target="iso2c")[0]
             if(len(country)==2):
-                self.country_cache[name] = country
+                self.country_cache[name] = country.upper()
             else:
                 country = random_string()
-                self.country_cache[name] = country
+                self.country_cache[name] = country.upper()
         
-        return country.lower()
+        return country.upper()
         
     def get_language(self,row):
         lang = row.get("#language",default=self.default_language)
@@ -152,48 +156,78 @@ class TagLifter:
             self.type_cache[tag] = tag_type
         return tag_type
 
-
+    # Check for an def:identifierPattern property attached to any given class
+    def get_id_pattern(self,tag):
+        if tag in self.id_pattern_cache.keys():
+            pattern = self.id_pattern_cache[tag]
+        else: 
+           pattern = self.onto.value(self.ontology[tag],self.ontology["identifierPattern"]) 
+           if(pattern == None):
+               pattern = '{random}'
+           self.id_pattern_cache[tag] = pattern
+        
+        return pattern
+    
     def generate_identifier(self,row,path,entity_type,country = "xx",lang="en"):
-        if path + "+identifier" in row.keys(): #Check if this entity already has an identifier given in a column
+        #1. Check if this entity already has an identifier given in an +identifier column
+        # E.g, if path is #project+company, look for #project+company+identifier
+        if path + "+identifier" in row.keys():
             if not row[path + "+identifier"].strip() == "":
                 return urllib.parse.quote(row[path + "+identifier"].strip(),safe='/')
         
+        #2. Check if we have a default language tagged, or non-language tagged, column for this path
+        # E.g. If the node found was #project+company+share, and we've been passed #project+company
+        # check if #project+company+en or #project+company columns exist to give us a name
+        # of the entity to work with
         if path + "+" + lang in row.keys():
             path = path + "+" + lang
         elif path in row.keys():
             path = path
-        else: # We had nothing to work with, so just general a UUID
+        else: # We had nothing to work with, so generate a random string. 
             return country + "/" + random_string()
         
+        #3. Check if we already have an identifier for a thing of this type, and with this name, in the cache
         cache_key = entity_type + self.clean_string(row[path])
         if cache_key in self.id_cache.keys() and len(self.clean_string(row[path]).strip()) > 1:
             return self.id_cache[cache_key]
 
-        if entity_type == "project":
-            identifier = country + "/" + self.generate_project_identifier(row[path])
-        elif entity_type == "company":
-            identifier = random_string()
-        elif entity_type == "group":
-            identifier = self.clean_string(row[path]).strip().lower() + "-" + random_string()[0:4]
-        elif entity_type == "source":
-            identifier = self.clean_string(row[path]).strip()
-        elif entity_type == "commodity":
-            identifier = "local/" + self.clean_string(row[path]).strip()
-        elif entity_type == "contributor":
-            identifier = random_string()
-        elif entity_type == "country":
-            identifier = self.get_country_code_from_name(self.clean_string(row[path]).strip())
-        elif entity_type == "paymentType":
-            identifier = self.get_country(row,path)    
-        else:
-            identifier = country + "/" + random_string()
+        pattern = self.get_id_pattern(self.class_title(entity_type))
+        
+        #4. If not, construct an identifier based on the appropriate pattern
+        # ID patterns include
+        #  - Country {country} 
+        #  - Country from name {country-from-name}
+        #  - Random string {random}
+        #  - Geographic random string (look for a country column) {country}-{random}
+        #  - First and Second Word and random suffix {eyekey}-{suffix}
+        #  - Clean string {cleanstring}
+        
+        if "{country}" in pattern:
+            pattern = pattern.replace("{country}",country)
+        
+        if "{country-from-name}" in pattern:
+            pattern = pattern.replace("{country-from-name}",self.get_country_code_from_name(self.clean_string(row[path]).strip()))
+        
+        if "{random}" in pattern:
+            pattern = pattern.replace("{random}",random_string())
+        
+        if "{eyekey}" in pattern:
+            pattern = pattern.replace("{eyekey}",self.generate_eyekey(row[path]))
+        
+        if "{suffix}" in pattern:
+            pattern = pattern.replace("{suffix}",''.join(random.choice('0123456789abcdefghijklmnopqrstuvwxyz') for i in range(6)))
+    
+        if "{cleanstring}" in pattern:
+            pattern = pattern.replace("{cleanstring}",self.clean_string(row[path]).strip())
+            
+        identifier = pattern
 
         self.id_cache[cache_key] = identifier
 
         return identifier
 
-    def generate_project_identifier(self,name):
-        """Generates a project identifier.
+    def generate_eyekey(self,name):
+        """Generates an identifier that is easy to eye-ball and recognise when reading down a list of data
 
         If the project name is a single word, use the first 4 digits, then a 6 characther random alphanumeric string.
         If the project name is two words, use the first two digits of each word. 
@@ -203,12 +237,11 @@ class TagLifter:
         """
         name = name.lower().split(" ")
         if len(name) == 1:
-            start = self.clean_string(name[0])[:4]
+            eyekey = self.clean_string(name[0])[:4]
         else:
-            start = self.clean_string(name[0])[:2] + self.clean_string(name[1])[:2]
+            eyekey = self.clean_string(name[0])[:2] + self.clean_string(name[1])[:2]
 
-        suffix = ''.join(random.choice('0123456789abcdefghijklmnopqrstuvwxyz') for i in range(6))
-        return start + "-" + suffix
+        return eyekey
 
     # Create a new entity of a given class (entity_type)
     def create_entity(self,entity_type,path,row,country,lang):
@@ -227,7 +260,11 @@ class TagLifter:
         if not meta_data:
             meta_data = self.source_meta
         
-        entity = URIRef(self.base + "prov/source/" + random_string()) #ToDo - consider whether we should build this off of filename and time?
+        if "sheet" in meta_data.keys():
+            identifier = random_string() + "/sheet/" + self.clean_string(meta_data['sheet'])
+        else:
+            identifier = random_string()
+        entity = URIRef(self.base + "prov/source/" + identifier)
         self.graph.add((entity,RDF.type,PROV.Entity)) ## ToDo - ****** CORRECT THE ENTITY TYPE HERE *****
         
         for key in meta_data.keys():
@@ -235,17 +272,11 @@ class TagLifter:
                 pass
             elif key == "source":
                 pass
-            elif key == "primarySource":
-                pass
-            elif key == "sourceType":
-                pass
             else:
                 self.graph.add((entity,self.ontology[key],Literal(meta_data[key])))
         return entity
-            
 
-        
-    
+
     def build_graph(self):
         """
         Taking the mapped data in self.map and the ontology, build out a graph.
@@ -263,6 +294,9 @@ class TagLifter:
         else:
             data = self.map
         
+        if self.skip_sheet:
+            if self.debug: print("No data found in sheet")
+            return False
         # We need to build the meta-data object.
         source = self.create_metadata()
         
@@ -287,136 +321,153 @@ class TagLifter:
             last_class = entity_class
             
             for key in row.keys():
-
+                last_entity= None ## TEST 
                 col_lang = lang
                 current_path = ""
 
                 tag_path = key.split("+")
                 
-                for n in range(len(tag_path)):
-                    tag = tag_path[n]
-                    if (not tag.isdigit()) and len(tag) > 2: #If this is a digit, or a language tag we skip.
+                if not key == "#-":
+                    for n in range(len(tag_path)):
+                        tag = tag_path[n]
+                        if self.debug: print("Processing tag [" + tag +"] in col ["+ key +"] on line ["+ str(line) +"]")
+                        if (not tag.isdigit()) and len(tag) > 2: #If this is a digit, or a language tag we skip.
                     
-                        current_path += "+"+tag if not current_path == "" else tag
-                        if tag[0] == "#":
-                            tag = tag[1:]
+                            current_path += "+"+tag if not current_path == "" else tag
+                            if tag[0] == "#":
+                                tag = tag[1:]
                     
-                        # Check if we are dealing with an entity count
-                        if (tag_path[n+1] if len(tag_path) > n+1 else '').isdigit():
-                            current_path += "+"+tag_path[n+1]
-                            inc = 1
-                        else:
-                            inc = 0
+                            # Check if we are dealing with an entity count
+                            if (tag_path[n+1] if len(tag_path) > n+1 else '').isdigit():
+                                current_path += "+"+tag_path[n+1]
+                                inc = 1
+                            else:
+                                inc = 0
 
-                        if len((tag_path[n+1+inc] if len(tag_path) > n+1+inc else '')) == 2:
-                            col_lang = tag_path[n+1+inc] 
-                            inc += 1
-                        
-                        if(not(row[key]=="")): # Only process when there is a value here
-                            tag_type = self.get_tag_type(tag)
-                            if tag_type == "Class":
-                                # ToDo: Check if it is in the entity cache
-                                # print current_path
-                                if current_path in entity_cache.keys():
-                                    entity = entity_cache[current_path]['entity']
-                                    entity_class =  entity_cache[current_path]['class']
-                                else:
-                                    entity = self.create_entity(tag,current_path,row,country,col_lang)
-                                    self.graph.add((entity,PROV.wasDerivedFrom,source_row))
-                                    entity_class = self.ontology[self.class_title(tag)]
-                                    entity_cache[current_path] = {"entity":entity,"class":entity_class}
-                            
-                            
-                                # Check if we have a name to apply to this column. 
-                                # If the language is the same as the default language, or the row language, we use this as the prefLabel
-                                if col_lang == self.default_language:
-                                    label_rel = SKOS.prefLabel
-                                else:
-                                    label_rel = SKOS.altLabel
-                                if (current_path + "+" + col_lang) in row.keys():
-                                    self.graph.add((entity,label_rel,Literal(row[current_path + "+" + col_lang].strip(),lang=col_lang)))
-                                elif current_path in row.keys():
-                                    self.graph.add((entity,label_rel,Literal(row[current_path].strip(),lang=col_lang)))                                
-                            
-                                # First check if we can make a relationship between this entity, and it's parent, or nearest neighbour
-                                if not last_entity == entity:
-                                    relationship = self.seek_class_relationship(last_entity,entity,row,country,lang,source_row)
-                                    if relationship:
-                                        entity_cache[current_path] = relationship
-                                last_entity = entity
-                                last_class = self.ontology[self.class_title(tag)]
-                            
-                                # Now check for other possible relationships: https://github.com/timgdavies/tag-lifter/issues/1
-
-                                possible_relationships = self.check_available_relationships(tag)
-
-                                ###Implementing https://github.com/timgdavies/tag-lifter/issues/1 (but very inefficiently!)
-                                # (2) Does a column exist at the next level of depth?
-                                for rel in possible_relationships:
-                                    search = current_path + "+" + rel[0].lower() + rel[1:]
-                                    for skey in row.keys():
-                                        if search in skey:
-                                            try:
-                                                possible_relationships.remove(rel) #If we're going to get to this relationship later, unset it. 
-                                            except ValueError:
-                                                pass # We might have already removed the element
-                                           
-                                # (3) Does a column exist at the parent level for these classes?
-                                # First, work out the parent node
-                                if n == 0:
-                                    parent = "#"
-                                else:
-                                    parent = "+".join(tag_path[0:n]) + "+"
-                            
-                                # Now iterate through remaining relationships NEEDS TESTING
-                                for rel in possible_relationships:
-                                    search = parent + rel[0].lower() + rel[1:]
-                                    #if not search in entity_cache.keys():
-                                    for skey in row.keys():
-                                        if search in skey:
-                                            try:
-                                                possible_relationships.remove(rel)
-                                                if search in entity_cache:
-                                                    relationship = self.seek_class_relationship(entity,entity_cache[search]['entity'],row,country,lang,source_row)
-                                                else: 
-                                                    print( search + " has not been created yet, so we can relate to it")
-                                            except ValueError:
-                                                pass   
-                            
-                                # (1) Is the entry already created
-                            
-                            elif tag_type == "ObjectProperty":
-                                # We don't handle objectProperties right now.
-                                pass
-                            
-                            elif tag_type == "DataProperty" or tag_type == "Unknown":
-                                # We attach any data properties to the previous class in the tag_path, or in the last column if no classes found since then
-                                # ToDo: This needs to take more account of data types from the ontology
-                                # This needs to also check if we should be attaching to the class, or to a mediating class
-                                if len(tag_path) > (1 + n + inc):
-                                    print( "Data properties can only be qualified by language tags. " + key + " is an invalid tag.")
-                                else:
-                                    last_path = "+".join(tag_path[:-1])
-                                    try: 
-                                        step = entity_cache[last_path]['step']
-                                        step_class = entity_cache[last_path]['step_class']
-                                    except KeyError:
-                                        step = None
-                                        step_class = None
-                            
-                                    # We need to check any restrictions on the data property
-                                    # 1. Can it be attached to the class;
-                                    # 2. If not, can it be attached to the intermediary (found in the entity cache for the last path?)
-                                    # 3. What typing do we need to provide? 
-                            
-                                    if self.add_data_property(entity,entity_class,self.ontology[tag],row[key]):
-                                        pass
-                                    elif step and self.add_data_property(step,step_class,self.ontology[tag],row[key]):
-                                        pass
+                            if len((tag_path[n+1+inc] if len(tag_path) > n+1+inc else '')) == 2:
+                                col_lang = tag_path[n+1+inc] 
+                                inc += 1
+                            print(key)
+                            if(not(row[key]=="")): # Only process when there is a value here
+                                tag_type = self.get_tag_type(tag)
+                                if tag_type == "Class":
+                                
+                                    if current_path in entity_cache.keys():
+                                        entity = entity_cache[current_path]['entity']
+                                        entity_class =  entity_cache[current_path]['class']
                                     else:
-                                        if self.allow_extra_properties:
-                                            self.graph.add((last_entity,self.ontology["misc/"+tag],Literal(row[key]))) 
-                           
+                                        entity = self.create_entity(tag,current_path,row,country,col_lang)
+                                        entity_class = self.ontology[self.class_title(tag)]
+                                        if str(entity_class) in self.type_provenance_cache.keys():
+                                            self.graph.add((entity,PROV.wasDerivedFrom,source_row))
+                                        entity_cache[current_path] = {"entity":entity,"class":entity_class}
+                            
+                            
+                                    # Check if we have a name to apply to this column. 
+                                    # If the language is the same as the default language, or the row language, we use this as the prefLabel
+                                    if col_lang == self.default_language:
+                                        label_rel = SKOS.prefLabel
+                                    else:
+                                        label_rel = SKOS.altLabel
+                                    if (current_path + "+" + col_lang) in row.keys():
+                                        self.graph.add((entity,label_rel,Literal(row[current_path + "+" + col_lang].strip(),lang=col_lang)))
+                                    elif current_path in row.keys():
+                                        self.graph.add((entity,label_rel,Literal(row[current_path].strip(),lang=col_lang)))                                
+                            
+                                    # First check if we can make a relationship between this entity, and it's parent, or nearest neighbour
+                                    if last_entity and (not last_entity == entity):
+                                        if self.debug: print("Seeking relationship between "+ str(last_class) + " and "+ str(entity_class))
+                                        relationship = self.seek_class_relationship(last_entity,last_class,entity,entity_class,row,country,lang,source_row)
+                                        if relationship:
+                                            if self.debug: print("Storing relationship in entity cache for " + current_path)
+                                            if self.debug: print(relationship)
+                                            entity_cache[current_path] = relationship
+                                        
+                                    last_entity = entity
+                                    last_class = self.ontology[self.class_title(tag)]
+
+    # Removed on 1st October 2015. Currently slowing things down - and not adding much if templates are constructed well
+    # 
+    # ToDo: Re-implement, so that relationships with neighbouring classes are made
+
+                                    # Now check for other possible relationships: https://github.com/timgdavies/tag-lifter/issues/1
+                                    possible_relationships = self.check_available_relationships(tag)
+
+                                    ###Implementing https://github.com/timgdavies/tag-lifter/issues/1 (but very inefficiently!)
+                                    # (2) Does a column exist at the next level of depth?
+                                    for rel in possible_relationships:
+                                        search = current_path + "+" + rel[0].lower() + rel[1:]
+                                        for skey in row.keys():
+                                            if search in skey:
+                                                try:
+                                                    possible_relationships.remove(rel) #If we're going to get to this relationship later, unset it. 
+                                                except ValueError:
+                                                    pass # We might have already removed the element
+                                           
+                                    # (3) Does a column exist at the parent level for these classes?
+                                    # First, work out the parent node
+                                    if n == 0:
+                                        parent = "#"
+                                    else:
+                                        parent = "+".join(tag_path[0:n]) + "+"
+                                
+                                    # Now iterate through remaining relationships NEEDS TESTING
+                                    for rel in possible_relationships:
+                                        search = parent + rel[0].lower() + rel[1:]
+                                        #if not search in entity_cache.keys():
+                                        for skey in row.keys():
+                                            if search in skey:
+                                                try:
+                                                    possible_relationships.remove(rel)
+                                                    if search in entity_cache:
+                                                        relationship = self.seek_class_relationship(entity,entity_class,entity_cache[search]['entity'],entity_cache[search]['class'],row,country,lang,source_row)
+                                                        inverse_relationship = self.seek_class_relationship(entity_cache[search]['entity'],entity_cache[search]['class'],entity,entity_class,row,country,lang,source_row)
+                                                    else: 
+                                                        print( search + " has not been created yet, so we can't relate to it")
+                                                except ValueError:
+                                                    pass   
+                                
+                                      # (1) Is the entry already created
+                                
+                                elif tag_type == "ObjectProperty":
+                                    # We don't handle objectProperties right now.
+                                    pass
+                            
+                                elif tag_type == "DataProperty" or tag_type == "Unknown":
+                                    # We attach any data properties to the previous class in the tag_path, or in the last column if no classes found since then
+                                    if len(tag_path) > (1 + n + inc):
+                                        print( "Data properties can only be qualified by language tags. " + key + " is an invalid tag.")
+                                    else:
+                                        last_path = "+".join(tag_path[:-1])
+                                        if self.debug: print("Last Path is " + last_path)
+                                        try: 
+                                            if self.debug: print("Checking for step of last-path: " + last_path)
+                                            step = entity_cache[last_path]['step']
+                                            step_class = entity_cache[last_path]['step_class']
+                                        except KeyError:
+                                            step = None
+                                            step_class = None
+                            
+                                        # We need to check any restrictions on the data property
+                                        # 1. Can it be attached to the class;
+                                        # 2. If not, can it be attached to the intermediary (found in the entity cache for the last path?)
+
+                                        if self.add_data_property(entity,entity_class,self.ontology[tag],row[key],col_lang):
+                                            if self.debug: print("Added property "+ tag + " to " + str(entity))
+                                        elif step and self.add_data_property(step,step_class,self.ontology[tag],row[key],col_lang):
+                                            if self.debug: print ("Added property " + tag + " to " + str(step))
+                                        else:
+                                             if "skos:" in tag: # We are dealing with a skos tag
+                                                tag = tag.split(":")[1]
+                                                self.graph.add((entity,SKOS[tag],Literal(row[key],lang=col_lang))) 
+                                             elif "foaf:" in tag: # We are dealing with a skos tag
+                                                    tag = tag.split(":")[1]
+                                                    self.graph.add((entity,FOAF[tag],Literal(row[key],lang=col_lang)))
+                                             else:
+                                                 if self.allow_extra_properties:
+                                                     self.graph.add((entity,self.ontology["misc/"+tag],Literal(row[key]))) 
+                                                     if self.debug: print("Added extra property misc/" + tag + " to " + str(entity))
+           
     def check_available_relationships(self,source):
           """
           Check what object relationships the current class can stand in, and return a list.
@@ -431,33 +482,44 @@ class TagLifter:
               PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
               SELECT DISTINCT ?t1 ?t2
               WHERE { 
-                ?o  a owl:Class. 
+                ?o a owl:Class. 
                 FILTER(?o = <%s>)
-                {  
-                  ?o rdfs:subClassOf+ ?restriction.
-                  ?restriction a owl:Restriction. 
-                  ?restriction owl:onProperty ?p1.
-                  {
-                    {
-                      ?restriction owl:someValuesFrom ?t1.
-                    } UNION {  
-                      ?restriction owl:someValuesFrom ?restrictionClass.
-                      ?t1 rdfs:subClassOf+ ?restrictionClass.
+                {
+                   ?t1 rdfs:subClassOf+ ?restriction.
+                       ?restriction a owl:Restriction. 
+                       {
+                         ?restriction owl:someValuesFrom ?o.
+                       } UNION {
+                         ?restriction owl:someValuesFrom ?restrictionClass.
+                         ?o rdfs:subClassOf+ ?restrictionClass.
+                       }
+
+                } UNION
+                {
+                    {  
+                      ?o rdfs:subClassOf+ ?restriction.
+                      ?restriction a owl:Restriction. 
+                      {
+                        {
+                          ?restriction owl:someValuesFrom ?t1.
+                        } UNION {  
+                          ?restriction owl:someValuesFrom ?restrictionClass.
+                          ?t1 rdfs:subClassOf+ ?restrictionClass.
+                        }
+                      }
                     }
-                  }
-                }
-                OPTIONAL {
-                  ?t1 rdfs:subClassOf+ ?restriction2.
-                  ?restriction2 a owl:Restriction.
-                  ?restriction2 owl:onProperty ?p2.
-                  {
-                    {
-                       ?restriction2 owl:someValuesFrom ?t2.
-                    } UNION {
-                       ?restriction2 owl:someValuesFrom ?restriction2class.
-                       ?t2 rdfs:subClassOf+ ?restriction2class.
+                    OPTIONAL {
+                      ?t1 rdfs:subClassOf+ ?restriction2.
+                      ?restriction2 a owl:Restriction.
+                      {
+                        {
+                           ?restriction2 owl:someValuesFrom ?t2.
+                        } UNION {
+                           ?restriction2 owl:someValuesFrom ?restriction2class.
+                           ?t2 rdfs:subClassOf+ ?restriction2class.
+                        }
+                      }
                     }
-                  }
                 }
               }"""%(source_class)
               rels = []
@@ -479,7 +541,7 @@ class TagLifter:
               return rels
 
 
-    def add_data_property(self,subj,subj_class,predicate,value):
+    def add_data_property(self,subj,subj_class,predicate,value,lang):
         """
         First check if the domain restrictions of the predicate allow it to be attached this subject.
         
@@ -496,7 +558,7 @@ class TagLifter:
         We rely on Pandas to cast some values right now...
         
         """
-        
+        value = value.strip()
         if ((predicate,RDFS.domain,subj_class)) in self.onto:
             predicate_range = self.onto.value(predicate,RDFS.range)
             if predicate_range == XSD.dateTime:
@@ -504,9 +566,8 @@ class TagLifter:
             elif predicate_range ==XSD.boolean:
                 value = True if value else False ## ToDo - improve the handling of Booleans
             elif predicate_range ==XSD.float:
-              #  value = str(value).translate(None,['1','2','3','4','5','7','8','9','0','.'])  # ToDo - set-up better replacemnt for errange % signs etc.
                 try:
-                    value = locale.atof(str(value))
+                    value = locale.atoi(re.sub("[^\d\.]", "", value))
                 except ValueError:
                     value = value
             elif predicate_range ==XSD.integer:
@@ -515,6 +576,7 @@ class TagLifter:
                     value = locale.atoi(str(value))
                 except ValueError:
                     value = value
+                
             self.graph.add((subj,predicate,Literal(value)))
             return True
         else:
@@ -523,7 +585,7 @@ class TagLifter:
   
         
 
-    def seek_class_relationship(self,source,target,row,country,lang,source_row):
+    def seek_class_relationship(self,source,source_class,target,target_class,row,country,lang,source_row):
         """
         Given two classes, this routine aims to find either a direct relationship that can be made between them,
         or an indirect (one step removed) relationship that can be made.
@@ -536,13 +598,15 @@ class TagLifter:
         
         """
         if not source == target:
+            if self.debug: print(str(source_class) + " -----> " + str(target_class))
+            if self.debug: print(str(source) + " -----> " + str(target))
+            
             cache_key = str(source) + "_"+ str(target)
             if cache_key in self.relationship_cache.keys():
                 return self.relationship_cache[cache_key]        
-        
-            source_class = self.graph.value(source, RDF.type)
-            target_class = self.graph.value(target, RDF.type)
-        
+            
+
+            
             rt_cache_key = str(source_class)+"_"+str(target_class)
             if rt_cache_key in self.relationship_cache.keys():
                 relationships = self.relationship_cache[rt_cache_key]
@@ -605,6 +669,7 @@ class TagLifter:
                 self.graph.add((source,URIRef(rel),target))
                 self.add_inverse(source,rel,target)
                 self.relationship_cache[cache_key] = {"entity":target,"class":target_class}
+                if self.debug: print("Found direct relationship between " + str(source) + " and " + str(target))
                 return self.relationship_cache[cache_key] 
         
             for rel in relationships['indirect']:
@@ -621,6 +686,7 @@ class TagLifter:
                 self.add_inverse(source,rel['p1'],entity) # We add the inverse relationships also
                 self.graph.add((entity,rel['p2'],target))
                 self.add_inverse(entity,rel['p2'],target) # We add the inverse relationships also
+                if self.debug: print("Found indirect relationship between " + str(source) + " and " + str(target))
                 self.relationship_cache[cache_key] = {"entity":target,"class":target_class,"step":entity,"step_class":rel['t1']}
                 return self.relationship_cache[cache_key]
 
@@ -637,16 +703,22 @@ class TagLifter:
             self.graph.add((obj,inverse,subj))
         for inverse in self.onto.objects(predicate,OWL.inverseOf):
             self.graph.add((obj,inverse,subj))
-        
-        
+            
+    def build_type_provenance_cache(self):
+        for provclass in self.onto.subjects(self.ontology['captureProvenance'],Literal(True)):
+            self.type_provenance_cache[str(provclass)] = True
+            if self.debug: print("Provide provenance for " + str(provclass))
 
     def __init__(self, ontology = None, source = None, base = "http://localhost/data/",source_meta = None,debug=True):
+        self.debug = True
+        self.skip_sheet = False
         self.source_meta = source_meta
         self.debug = debug
         self.country_cache = {}
         self.id_cache = {}
         self.type_cache = {}
         self.relationship_cache = {}
+        self.id_pattern_cache = {}
         self.default_language = "en"
         self.default_country = "xx"
         self.allow_extra_properties = True
@@ -659,4 +731,6 @@ class TagLifter:
             self.load_ontology(ontology)
         if source:
             self.load_data(source)
+        self.type_provenance_cache = {}
+        self.build_type_provenance_cache()
 

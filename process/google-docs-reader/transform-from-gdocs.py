@@ -8,9 +8,8 @@ from rdflib import Graph
 import requests
 
 
-sheets_to_parse = ['Sources','Companies and Groups','Projects, sites & companies','Payments','Production']
-
 tl = TagLifter(ontology = "../../ontology/resource-projects-ontology.rdf",base="http://resourceprojects.org/",source_meta={})
+
 
 gdoc = str(sys.argv[1])
 output = str(sys.argv[2])
@@ -22,14 +21,14 @@ sheetlist = requests.get('https://spreadsheets.google.com/feeds/worksheets/'+key
 sheetjson = json.loads(sheetlist.text)
 
 for entry in sheetjson['feed']['entry']:
-    if entry['title']['$t'] in sheets_to_parse:
-        for link in entry['link']:
-            if link['type'] == "text/csv":
-                print(link['href'])
-                print("Loading " + entry['title']['$t'])
-                tl.source_meta = {"sheet":entry['title']['$t']}
-                tl.load_data(link['href'])
-                tl.build_graph()
+    for link in entry['link']:
+        if link['type'] == "text/csv":
+            print(link['href'])
+            print("Loading " + entry['title']['$t'])
+            tl.source_meta = {"sheet":entry['title']['$t']}
+            tl.load_data(link['href'])
+            tl.build_graph()
+
 
 tl.graph.serialize(format='turtle',destination="../../data/"+output +".ttl")
                 
