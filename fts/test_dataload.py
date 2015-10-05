@@ -7,6 +7,7 @@ import requests
 
 server_url = os.environ['SERVER_URL']
 prefix = '/'
+dataset_url = None
 
 @pytest.fixture(scope="module")
 def browser(request):
@@ -16,16 +17,36 @@ def browser(request):
     return browser
 
 
-def test_googledoc_input(browser):
+@pytest.fixture(scope="module")
+def google_doc_dataset(request, browser):
     source_url = 'https://docs.google.com/spreadsheets/d/1lZBVe6TGfrPYtaP4bqP9OZ0WG26vh_jTzOOm1h2Qdc4/edit#gid=0'
 
     browser.get(server_url + prefix)
     browser.find_element_by_id('id_source_url').send_keys(source_url)
     browser.find_element_by_css_selector("#fetchURL > div.form-group > button.btn.btn-primary").click()
+    dataset_url = browser.current_url
 
     browser.find_element_by_css_selector("button.btn.btn-default.convert").click()
+
+    return dataset_url
+
+
+def test_googledoc_input(browser, google_doc_dataset):
+    browser.get(google_doc_dataset)
     ttl_href = browser.find_element_by_link_text('Outputted TTL').get_attribute('href')
     assert 'Block 15' in requests.get(ttl_href).text
+
+
+@pytest.mark.parametrize('process_id,other_process_id', [ ('staging', 'live'), ('live', 'staging') ])
+def test_push(browser, google_doc_dataset, process_id, other_process_id):
+    browser.find_element_by_css_selector("button.btn.btn-default.{}".format(process_id)).click()
+    # Check if it's in
+    url = 'http://localhost:8890/sparql?default-graph-uri=&query=select+%3Fs+WHERE+%7B+%3Fs+a+%3Chttp%3A%2F%2Fresourceprojects.org%2Fdef%2FProject%3E+%7D&format=application%2Fsparql-results%2Bjson&timeout=0&debug=on'
+    assert 'resourceprojects.org' in requests.get(url, headers={'Host': process_id}).text
+    if other_process_id != 'staging':
+        assert 'resourceprojects.org' not in requests.get(url, headers={'Host': other_process_id}).text
+    browser.find_element_by_css_selector("button.btn.btn-default.rm_{}".format(process_id)).click()
+    assert 'resourceprojects.org' not in requests.get(url, headers={'Host': process_id}).text
 
 
 def test_humanize_naturaltime(browser):
