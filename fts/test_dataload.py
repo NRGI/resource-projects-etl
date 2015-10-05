@@ -42,10 +42,10 @@ def test_push(browser, google_doc_dataset, process_id, other_process_id):
     browser.find_element_by_css_selector("button.btn.btn-default.{}".format(process_id)).click()
     # Check if it's in
     url = 'http://localhost:8890/sparql?default-graph-uri=&query=select+%3Fs+WHERE+%7B+%3Fs+a+%3Chttp%3A%2F%2Fresourceprojects.org%2Fdef%2FProject%3E+%7D&format=application%2Fsparql-results%2Bjson&timeout=0&debug=on'
-    assert 'resourceprojects.org' in requests.get(url, headers={'Host': process_id}).text
-    assert 'resourceprojects.org' not in requests.get(url, headers={'Host': other_process_id}).text
+    assert 'resourceprojects.org' in requests.get(url, headers={'Host': 'arstneio' if process_id == 'staging' else process_id}).text
+    assert 'resourceprojects.org' not in requests.get(url, headers={'Host': 'arstneio' if other_process_id == 'staging' else other_process_id}).text
     browser.find_element_by_css_selector("button.btn.btn-default.rm_{}".format(process_id)).click()
-    assert 'resourceprojects.org' not in requests.get(url, headers={'Host': process_id}).text
+    assert 'resourceprojects.org' not in requests.get(url, headers={'Host': 'arstneio' if process_id == 'staging' else process_id}).text
 
 
 def test_humanize_naturaltime(browser):
