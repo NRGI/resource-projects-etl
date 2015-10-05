@@ -43,8 +43,7 @@ def test_push(browser, google_doc_dataset, process_id, other_process_id):
     # Check if it's in
     url = 'http://localhost:8890/sparql?default-graph-uri=&query=select+%3Fs+WHERE+%7B+%3Fs+a+%3Chttp%3A%2F%2Fresourceprojects.org%2Fdef%2FProject%3E+%7D&format=application%2Fsparql-results%2Bjson&timeout=0&debug=on'
     assert 'resourceprojects.org' in requests.get(url, headers={'Host': process_id}).text
-    if other_process_id != 'staging':
-        assert 'resourceprojects.org' not in requests.get(url, headers={'Host': other_process_id}).text
+    assert 'resourceprojects.org' not in requests.get(url, headers={'Host': other_process_id}).text
     browser.find_element_by_css_selector("button.btn.btn-default.rm_{}".format(process_id)).click()
     assert 'resourceprojects.org' not in requests.get(url, headers={'Host': process_id}).text
 
