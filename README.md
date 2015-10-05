@@ -33,6 +33,40 @@ Update DBA_PASS as appropriate.
 
 Then visit http://locahost:8000/
 
+### Full ResourceProjects.org deployment (with data staging and live frontends)
+
+OpenDataServices dev deploy can be found at https://github.com/OpenDataServices/opendataservices-deploy/blob/master/salt/resource-projects.sls (this is a SaltStack state file).
+
+For a live deploy, running docker directly (you probably don't want to do this, but the below commands should be translatable to your preferred deployment approach), you could do:
+
+```
+# Create the volume containers
+docker create --name virtuoso-data -v /usr/local/var/lib/virtuoso/db caprenter/automated-build-virtuoso
+docker create --name etl-data -v /usr/local/var/lib/virtuoso/db opendataservices/resource-projects-etl:live
+
+# Run the containers
+# Virtuoso
+docker run -p 127.0.0.1:8890:8890 --volumes-from virtuoso-data --name virtuoso caprenter/automated-build-virtuoso
+# ETL
+docker run -p 127.0.0.1:8001:80 --link virtuoso:virtuoso -e "DBA_PASS=dba" --volumes-from etl-data opendataservices/resource-projects-etl:live
+# Frontend (Live)
+docker run  -p 127.0.0.1:8080:80 --link virtuoso:virtuoso-live -e BASE_URL=http://resourceprojects.org/  -e SPARQL_ENDPOINT=http://virtuoso-live:8890/sparql opendataservices/resourceprojects.org-frontend:live
+# Frontend (Staging)
+docker run -p 127.0.0.1:8081:80 --link virtuoso:virtuoso-staging -e BASE_URL=http://staging.resourceprojects.org/  -e SPARQL_ENDPOINT=http://virtuoso-staging:8890/sparql opendataservices/resourceprojects.org-frontend:live
+
+# Perform initial virtuoso setup
+cat virtuoso_setup.sql |  docker run --link virtuoso:virtuoso -i --rm caprenter/automated-build-virtuoso isql virtuoso
+```
+
+If BASE_URL does not match the URL the sites are exposed at, site navigation won't work correctly. On the other hand, SPARQL_ENDPOINT can be left exactly as it is here - these urls are wired up inside the docker container by --link, and must contain "live" and "staging" respectively for Virtuoso to provide the correct data.
+
+The above commands expose on 8890, 8801, 8080 and 8081 on localhost. Edit these to match what you want, or place a reverse proxy in front of them.
+
+You should update the virtuoso admin password - through the virutoso HTTP user interface, and then in the DBA_PASS environment variable passed to the ETL container.
+
+To get more recent builds than live, replace `:live` with `:master` in the above.
+
+
 ### Building docker image
 
 ```
