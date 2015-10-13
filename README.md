@@ -42,7 +42,7 @@ For a live deploy, running docker directly (you probably don't want to do this, 
 ```
 # Create the volume containers
 docker create --name virtuoso-data -v /usr/local/var/lib/virtuoso/db caprenter/automated-build-virtuoso
-docker create --name etl-data -v /usr/local/var/lib/virtuoso/db opendataservices/resource-projects-etl:live
+docker create --name etl-data -v /usr/local/var/lib/virtuoso/db -v /usr/src/resource-projects-etl/src/cove/media opendataservices/resource-projects-etl:live
 
 # Run the containers
 # Virtuoso
