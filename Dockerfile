@@ -41,4 +41,4 @@ RUN manage.py collectstatic --noinput
 COPY ontology ./ontology
 
 EXPOSE 80
-CMD gunicorn cove.wsgi -b 0.0.0.0:80 --timeout 600
+CMD gunicorn cove.wsgi -b 0.0.0.0:80 --timeout 600 -w 3 -k eventlet
