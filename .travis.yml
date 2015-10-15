@@ -20,7 +20,7 @@ before_install:
     # Run the ETL dashboard
     - docker run -d -p 127.0.0.1:8000:80 --link virtuoso:virtuoso -e DBA_PASS=dba opendataservices/resource-projects-etl
     - sudo apt-get update
-    - sudo apt-get install xvfb firefox
+    - sudo apt-get install -y xvfb firefox
     - "export DISPLAY=:99.0"
     - "sh -e /etc/init.d/xvfb start"
     # Run initial setup sql commands on virtuoso (run this after installing
