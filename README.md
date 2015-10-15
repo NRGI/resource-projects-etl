@@ -41,12 +41,12 @@ For a live deploy, running docker directly (you probably don't want to do this, 
 
 ```
 # Create the volume containers
-docker create --name virtuoso-data -v /usr/local/var/lib/virtuoso/db caprenter/automated-build-virtuoso
+docker create --name virtuoso-data -v /usr/local/var/lib/virtuoso/db opendataservices/virtuoso:live
 docker create --name etl-data -v /usr/local/var/lib/virtuoso/db -v /usr/src/resource-projects-etl/src/cove/media opendataservices/resource-projects-etl:live
 
 # Run the containers
 # Virtuoso
-docker run -p 127.0.0.1:8890:8890 --volumes-from virtuoso-data --name virtuoso caprenter/automated-build-virtuoso
+docker run -p 127.0.0.1:8890:8890 --volumes-from virtuoso-data --name virtuoso opendataservices/virtuoso:live
 # ETL
 docker run -p 127.0.0.1:8001:80 --link virtuoso:virtuoso -e "DBA_PASS=dba" --volumes-from etl-data opendataservices/resource-projects-etl:live
 # Frontend (Live)
@@ -55,7 +55,7 @@ docker run  -p 127.0.0.1:8080:80 --link virtuoso:virtuoso-live -e BASE_URL=http:
 docker run -p 127.0.0.1:8081:80 --link virtuoso:virtuoso-staging -e BASE_URL=http://staging.resourceprojects.org/  -e SPARQL_ENDPOINT=http://virtuoso-staging:8890/sparql opendataservices/resourceprojects.org-frontend:live
 
 # Perform initial virtuoso setup
-cat virtuoso_setup.sql |  docker run --link virtuoso:virtuoso -i --rm caprenter/automated-build-virtuoso isql virtuoso
+cat virtuoso_setup.sql |  docker run --link virtuoso:virtuoso -i --rm opendataservices/virtuoso:live isql virtuoso
 ```
 
 If BASE_URL does not match the URL the sites are exposed at, site navigation won't work correctly. On the other hand, SPARQL_ENDPOINT can be left exactly as it is here - these urls are wired up inside the docker container by --link, and must contain "live" and "staging" respectively for Virtuoso to provide the correct data.

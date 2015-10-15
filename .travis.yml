@@ -16,7 +16,7 @@ before_install:
 #    https://github.com/travis-ci/travis-ci/issues/4778
     - sudo service docker restart ; sleep 10
     # Run virtuoso
-    - docker run -d -p 127.0.0.1:8890:8890 --name virtuoso caprenter/automated-build-virtuoso
+    - docker run -d -p 127.0.0.1:8890:8890 --name virtuoso opendataservices/virtuoso:master
     # Run the ETL dashboard
     - docker run -d -p 127.0.0.1:8000:80 --link virtuoso:virtuoso -e DBA_PASS=dba opendataservices/resource-projects-etl
     - sudo apt-get update
@@ -25,7 +25,7 @@ before_install:
     - "sh -e /etc/init.d/xvfb start"
     # Run initial setup sql commands on virtuoso (run this after installing
     # xvfb just to give virtuoso some time to get started)
-    - cat virtuoso_setup.sql |  docker run --link virtuoso:virtuoso -i --rm caprenter/automated-build-virtuoso isql virtuoso
+    - cat virtuoso_setup.sql |  docker run --link virtuoso:virtuoso -i --rm opendataservices/virtuoso:master isql virtuoso
 
 install:
     - pip install -r requirements_test.txt

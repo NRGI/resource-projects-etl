@@ -1,6 +1,6 @@
 # Build based on virtuoso container in order to have access to virtuoso's
 # isql command.
-FROM caprenter/automated-build-virtuoso
+FROM opendataservices/virtuoso:master
 
 RUN apt-get update
 
