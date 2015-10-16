@@ -27,3 +27,9 @@ python transform-from-gdocs.py https://docs.google.com/spreadsheets/d/1_A02orMgp
 echo "Mali"
 python transform-from-gdocs.py https://docs.google.com/spreadsheets/d/1bdDzInl_sn6TIbAuSF49b3flzbdJHvuSOdskmByaInE/edit#gid=141760938 mali
 
+echo "Mexico"
+python transform-from-gdocs.py https://docs.google.com/spreadsheets/d/1bONyv_X918RZMDLmJ2kdDxHYy5IuImvI3c0CMkYSKEg/edit#gid=279124923 mexico
+
+echo "Peru"
+python transform-from-gdocs.py https://docs.google.com/spreadsheets/d/1gl3syhKsI-pR_lx3KykuKOLnHrp7ir2fRxjaPTO3DgM/edit#gid=1333644202 peru
+
