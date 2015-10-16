@@ -172,9 +172,13 @@ class TagLifter:
         #1. Check if this entity already has an identifier given in an +identifier column
         # E.g, if path is #project+company, look for #project+company+identifier
         if path + "+identifier" in row.keys():
-            if not row[path + "+identifier"].strip() == "":
-                return urllib.parse.quote(row[path + "+identifier"].strip(),safe='/')
-        
+           if not row[path + "+identifier"].strip() == "":
+               identifier = urllib.parse.quote(row[path + "+identifier"].strip(),safe='/')
+               if path in row.keys(): # ToDo: handle for when the thing only exists with a langauge tagged label (e.g. #country+en,#country+identifier)
+                   cache_key = entity_type + self.clean_string(row[path])
+                   self.id_cache[cache_key] = identifier
+               return identifier
+                           
         #2. Check if we have a default language tagged, or non-language tagged, column for this path
         # E.g. If the node found was #project+company+share, and we've been passed #project+company
         # check if #project+company+en or #project+company columns exist to give us a name
