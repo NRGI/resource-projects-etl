@@ -169,11 +169,16 @@ class TagLifter:
         return pattern
     
     def generate_identifier(self,row,path,entity_type,country = "xx",lang="en"):
+
         #1. Check if this entity already has an identifier given in an +identifier column
         # E.g, if path is #project+company, look for #project+company+identifier
         if path + "+identifier" in row.keys():
             if not row[path + "+identifier"].strip() == "":
-                return urllib.parse.quote(row[path + "+identifier"].strip(),safe='/')
+                identifier = urllib.parse.quote(row[path + "+identifier"].strip(),safe='/')
+                if path in row.keys(): # ToDo: handle for when the thing only exists with a langauge tagged label (e.g. #country+en,#country+identifier)
+                    cache_key = entity_type + self.clean_string(row[path])
+                    self.id_cache[cache_key] = identifier
+                return identifier
         
         #2. Check if we have a default language tagged, or non-language tagged, column for this path
         # E.g. If the node found was #project+company+share, and we've been passed #project+company
@@ -185,7 +190,7 @@ class TagLifter:
             path = path
         else: # We had nothing to work with, so generate a random string. 
             return country + "/" + random_string()
-        
+       
         #3. Check if we already have an identifier for a thing of this type, and with this name, in the cache
         cache_key = entity_type + self.clean_string(row[path])
         if cache_key in self.id_cache.keys() and len(self.clean_string(row[path]).strip()) > 1:
@@ -558,7 +563,11 @@ class TagLifter:
         We rely on Pandas to cast some values right now...
         
         """
-        value = value.strip()
+        try:
+            value = value.strip()
+        except AttributeError:
+            value = value
+            
         if ((predicate,RDFS.domain,subj_class)) in self.onto:
             predicate_range = self.onto.value(predicate,RDFS.range)
             if predicate_range == XSD.dateTime:
