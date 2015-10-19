@@ -3,6 +3,8 @@ from selenium import webdriver
 import os
 import time
 import requests
+import random
+import string
 
 
 server_url = os.environ['SERVER_URL']
@@ -24,6 +26,10 @@ def google_doc_dataset(request, browser):
     browser.get(server_url + prefix)
     browser.find_element_by_id('id_source_url').send_keys(source_url)
     browser.find_element_by_css_selector("#fetchURL > div.form-group > button.btn.btn-primary").click()
+
+    browser.find_element_by_id("name").send_keys('googledoc_test_' + ''.join(random.sample(string.ascii_lowercase, 10)))
+    browser.find_element_by_id("submit").click()
+
     dataset_url = browser.current_url
 
     browser.find_element_by_css_selector("button.btn.btn-default.convert").click()
@@ -62,6 +68,9 @@ def test_humanize_naturaltime(browser):
     browser.get(server_url + prefix)
     browser.find_element_by_id('id_source_url').send_keys(source_url)
     browser.find_element_by_css_selector("#fetchURL > div.form-group > button.btn.btn-primary").click()
+
+    browser.find_element_by_id("name").send_keys('test_' + ''.join(random.sample(string.ascii_lowercase, 10)))
+    browser.find_element_by_id("submit").click()
 
     dataset_url = browser.current_url
     dataload_url = server_url + prefix + 'dataload/'

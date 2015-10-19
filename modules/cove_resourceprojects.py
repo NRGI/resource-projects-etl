@@ -45,7 +45,7 @@ def convert(dataset):
 def put_to_virtuoso(dataset, staging):
     ttl_filename = os.path.join(dataset.supplied_data.upload_dir(), 'output.ttl')
     prefix = 'staging.' if staging else ''
-    graphuri = 'http://{}resourceprojects.org/{}'.format(prefix, dataset.supplied_data.pk)
+    graphuri = 'http://{}resourceprojects.org/{}'.format(prefix, dataset.name)
 
     # Call curl in a subprocess, as requests doesn't work with large files.
     #
@@ -86,7 +86,7 @@ def put_to_virtuoso(dataset, staging):
 
 def delete_from_virtuoso(dataset, staging):
     prefix = 'staging.' if staging else ''
-    graphuri = 'http://{}resourceprojects.org/{}'.format(prefix, dataset.supplied_data.pk)
+    graphuri = 'http://{}resourceprojects.org/{}'.format(prefix, dataset.name)
 
     # Using curl here because we're already using it for putting.
     # If we want to switch to e.g. requests this part should work fine.
