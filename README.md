@@ -42,7 +42,7 @@ For a live deploy, running docker directly (you probably don't want to do this, 
 ```
 # Create the volume containers
 docker create --name virtuoso-data -v /usr/local/var/lib/virtuoso/db opendataservices/virtuoso:live
-docker create --name etl-data -v /usr/local/var/lib/virtuoso/db -v /usr/src/resource-projects-etl/src/cove/media opendataservices/resource-projects-etl:live
+docker create --name etl-data -v /usr/src/resource-projects-etl/db -v /usr/src/resource-projects-etl/src/cove/media opendataservices/resource-projects-etl:live
 
 # Run the containers
 # Virtuoso
@@ -65,6 +65,19 @@ The above commands expose on 8890, 8801, 8080 and 8081 on localhost. Edit these 
 You should update the virtuoso admin password - through the virutoso HTTP user interface, and then in the DBA_PASS environment variable passed to the ETL container.
 
 To get more recent builds than live, replace `:live` with `:master` in the above.
+
+
+
+### Backup data
+
+```
+docker run --volumes-from etl-data -v $(pwd):/backup opendataservices/virtuoso:master tar cvzf /backup/etl-data.tar.gz /usr/src/resource-projects-etl/db /usr/src/resource-projects-etl/src/cove/media
+```
+
+Restore:
+```
+docker run -it --volumes-from etl-data -v $(pwd):/backup opendataservices/virtuoso:master tar xvzf /backup/etl-data.tar.gz -C /
+```
 
 
 ### Building docker image
