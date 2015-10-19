@@ -203,6 +203,14 @@ For example, if a company owns a stake in a project, then:
     
 
 
+    <!-- http://resourceprojects.org/def/reserves -->
+
+    <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/reserves">
+        <rdfs:label xml:lang="en">Reserves</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
     <!-- http://resourceprojects.org/def/source -->
 
     <owl:ObjectProperty rdf:about="http://resourceprojects.org/def/source"/>
@@ -391,6 +399,11 @@ See https://en.wikipedia.org/wiki/ISO_4217 for a list of codes. </rdfs:comment>
     <!-- http://resourceprojects.org/def/isOperator -->
 
     <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/isOperator">
+        <rdfs:label xml:lang="en">Is Operator?</rdfs:label>
+        <rdfs:comment xml:lang="en">The company responsible for managing operations with respect to a particular project. The operator designation is primarily used in oil projects involving a joint venture. 
+
+ResourceProjects.org aims to identify the operator of a given project and and records whether a participating company acts as the operator. Where there is an operator it is sometimes explicitly identified in the contract and can  often be identified in government and/or company descriptions of the project.
+</rdfs:comment>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Stake"/>
         <rdfs:range rdf:resource="&xsd;boolean"/>
     </owl:DatatypeProperty>
@@ -490,6 +503,9 @@ unknown -</rdfs:comment>
     <!-- http://resourceprojects.org/def/share -->
 
     <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/share">
+        <rdfs:label xml:lang="en">Share</rdfs:label>
+        <rdfs:comment xml:lang="en">Joint ventures and other structures whereby two or more companies agree to share profit, loss and control in a certain project are common in the extractive sector, especially the oil industry. ResourceProjects.org records the participating interest percentage a company has in a project. 
+</rdfs:comment>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Stake"/>
     </owl:DatatypeProperty>
     
@@ -656,7 +672,8 @@ unknown -</rdfs:comment>
     <owl:Class rdf:about="http://resourceprojects.org/def/Commodity">
         <rdfs:comment rdf:datatype="&xsd;boolean">false</rdfs:comment>
         <identifierPattern>{cleanstring}</identifierPattern>
-        <rdfs:comment xml:lang="en">The ResourceProjects.org repository focuses solely on non-renewable extractive resources. Projects are classified as either an ‘oil and gas’ or ‘mining’ project. These categories are then broken down into a list of commodities the project is producing or aims to produce. A project may have multiple commodities associated (ie. both oil and gas, or both gold and silver).</rdfs:comment>
+        <rdfs:comment xml:lang="en">The ResourceProjects.org repository focuses solely on non-renewable extractive resources. Projects are classified as either an ‘oil and gas’ or ‘mining’ project. These categories are then broken down into a list of commodities the project is producing or aims to produce. A project may have multiple commodities associated (ie. both oil and gas, or both gold and silver).
+</rdfs:comment>
     </owl:Class>
     
 
@@ -673,9 +690,12 @@ unknown -</rdfs:comment>
         </rdfs:subClassOf>
         <captureProvenance rdf:datatype="&xsd;boolean">true</captureProvenance>
         <identifierPattern>{random}</identifierPattern>
-        <rdfs:comment xml:lang="en">Company is used to represent any kind of organization that can enter into transactions around a resource project, license, contract or site, with the exception of government parties, which are represented by GovernmentParty.
+        <rdfs:comment xml:lang="en">Company is used to represent any kind of organization that can enter into transactions around a resource project, license, contract or site, with the exception of government parties, which are represented by GovernmentParty. 
+
+ResourceProjects.org may include companies that are holders of the mining or petroleum license, permit or other legal right to explore and/or extract, are signatories to the mining or petroleum contracts, have an ownership stake in the project, pay taxes related to commodity extraction to the government. Where possible, the recorded company name should match the name used in a national company registry or an opencorporates.org entry.
 
 Government owned companies are still represented using Company. 
+
 </rdfs:comment>
     </owl:Class>
     
@@ -687,26 +707,8 @@ Government owned companies are still represented using Company.
         <rdfs:subClassOf rdf:resource="http://resourceprojects.org/def/Transaction"/>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/relatedLineItem"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/ReportLineItem"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/payer"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Company"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/source"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/payee"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/GovernmentParty"/>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/paymentType"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/PaymentType"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
@@ -717,8 +719,14 @@ Government owned companies are still represented using Company.
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/paymentType"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/PaymentType"/>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/payee"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/GovernmentParty"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/relatedLineItem"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/ReportLineItem"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
@@ -727,7 +735,27 @@ Government owned companies are still represented using Company.
                 <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Project"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/source"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/payer"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Company"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
         <captureProvenance rdf:datatype="&xsd;boolean">true</captureProvenance>
+        <rdfs:comment xml:lang="en">Payments made by a company to the government, including:
+
+Project level payment: Payments made to government entities that are attributable to a particular project.
+
+Corporate level payment: Payment made to government entities that are incurred at the corporate level and are not easily attributable to a particular project
+
+Payment to governments: Payments to governments are amounts paid, whether in money or in kind, to a national, regional or local authority, departments or agencies of these authorities, or to a company majority-owned by such an authority. 
+</rdfs:comment>
         <identifierPattern>{country}/{random}</identifierPattern>
     </owl:Class>
     
@@ -736,6 +764,15 @@ Government owned companies are still represented using Company.
     <!-- http://resourceprojects.org/def/Concession -->
 
     <owl:Class rdf:about="http://resourceprojects.org/def/Concession">
+        <rdfs:label xml:lang="en">Concession</rdfs:label>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/source"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <captureProvenance rdf:datatype="&xsd;boolean">true</captureProvenance>
+        <rdfs:comment xml:lang="en">tbc</rdfs:comment>
         <identifierPattern xml:lang="en">{country}/{eyekey}-{suffix}</identifierPattern>
     </owl:Class>
     
@@ -747,18 +784,21 @@ Government owned companies are still represented using Company.
         <rdfs:label xml:lang="en">Contract (resource contract)</rdfs:label>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/source"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
                 <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasStake"/>
                 <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Stake"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/source"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
         <captureProvenance rdf:datatype="&xsd;boolean">true</captureProvenance>
-        <rdfs:comment xml:lang="en">Contract (resource contract): An agreement or set of legal terms granting a company the right to explore or extract a resource in a given area in return for paying to the government royalties, taxes or other consideration. Resource contracts are known in different countries by various terms, including lease, license, concession, block, mineral development agreement (MDA), and production sharing contract (PSC), among others. </rdfs:comment>
+        <rdfs:comment xml:lang="en">An agreement or set of legal terms whereby generally a government entity or its representative (e.g., state owned enterprise) grants a company the right to explore and/or extract a resource in a given area in return for paying to the government royalties, taxes or other consideration. Resource contracts are known in different countries by various names, including lease, license, concession, block, mineral development agreement (MDA), and production sharing contract (PSC), among others. 
+
+In ResourceProjects.org one or more contracts may be associated with a project: ideally via the contract title, and a web link to details of the full contract text.
+</rdfs:comment>
         <identifierPattern>{country}/{eyekey}-{suffix}</identifierPattern>
     </owl:Class>
     
@@ -796,14 +836,26 @@ Government owned companies are still represented using Company.
         <rdfs:subClassOf rdf:resource="http://resourceprojects.org/def/Transaction"/>
         <rdfs:subClassOf>
             <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/relatedLineItem"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/ReportLineItem"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
                 <owl:onProperty rdf:resource="http://resourceprojects.org/def/paymentType"/>
                 <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/PaymentType"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/relatedLineItem"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/ReportLineItem"/>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/relatedProject"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Project"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/source"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
@@ -820,20 +872,8 @@ Government owned companies are still represented using Company.
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/source"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
                 <owl:onProperty rdf:resource="http://resourceprojects.org/def/payer"/>
                 <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Company"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/relatedProject"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Project"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <captureProvenance rdf:datatype="&xsd;boolean">true</captureProvenance>
@@ -847,18 +887,20 @@ Government owned companies are still represented using Company.
     <owl:Class rdf:about="http://resourceprojects.org/def/Group">
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/groupMember"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/GroupMembership"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
                 <owl:onProperty rdf:resource="http://resourceprojects.org/def/source"/>
                 <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/groupMember"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/GroupMembership"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
         <captureProvenance rdf:datatype="&xsd;boolean">true</captureProvenance>
-        <rdfs:comment xml:lang="en">A Group consists of a collection of related companies - for example, a corporate grouping for the purpose of reporting data. </rdfs:comment>
+        <rdfs:comment xml:lang="en">A Group consists of a collection of related companies - for example, a corporate grouping for the purpose of reporting data. 
+
+Where several layers of ownership exist, the name of the ultimate parent entity should be used. Often this may be the name of the entity listed on a stock exchange or of the entity that produces consolidated annual reports on behalf of subsidiaries. </rdfs:comment>
         <identifierPattern>{cleanstring}</identifierPattern>
     </owl:Class>
     
@@ -933,21 +975,25 @@ GroupMemberships can have additional properties to indicate the nature of the me
         <rdfs:label xml:lang="en">Payment Type</rdfs:label>
         <captureProvenance rdf:datatype="&xsd;boolean">true</captureProvenance>
         <identifierPattern>{random}</identifierPattern>
-        <rdfs:comment xml:lang="en">There are a variety of approaches for classifying extractives industry payments, including:
+        <rdfs:comment xml:lang="en">ResourceProjects.org allows payments to be classified into nine separate payment types. These payment types are based on those defined in the EU Accounting Directive.
 
-(1) An extended version the IMF Global Finance Statistics Manual (GFSM) 2014 Revenue Classification used by the Extractives Industry Transparency Initiative (EITI) reporting templates. 
+* Taxes levied on the income, production or profits of companies
 
-(2) The classification used in Article 41 of the Directive 2013/34/EU of the European Parliament and Council, commonly referred to as the EU Reporting Directive.
+* License fees, rental fees, entry fees, and other considerations for licenses and/or concessions
 
-(3) Dodd-Frank Act Section 1504, SEC Rule 13(q)
+* Dividends
 
-Ideally, a mapping between these different classifications should be made.
+* Royalties
 
+* Signature, discovery and production bonuses
 
-Sources:
+* Production entitlements, which can be measured both in volumes (ie. barrels) and in value
 
-(1) https://eiti.org/document/eiti-summary-data-template
-(2) http://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32013L0034&amp;from=EN#d1e4025-19-1
+* Payments for infrastructure improvements
+
+* Other
+
+* Total (encapsulating payments that are not disaggregated by payment type)
 
 </rdfs:comment>
     </owl:Class>
@@ -957,6 +1003,7 @@ Sources:
     <!-- http://resourceprojects.org/def/Production -->
 
     <owl:Class rdf:about="http://resourceprojects.org/def/Production">
+        <rdfs:label xml:lang="en">Production</rdfs:label>
         <rdfs:subClassOf rdf:resource="http://resourceprojects.org/def/Statistics"/>
         <rdfs:subClassOf>
             <owl:Restriction>
@@ -966,6 +1013,7 @@ Sources:
         </rdfs:subClassOf>
         <captureProvenance rdf:datatype="&xsd;boolean">true</captureProvenance>
         <identifierPattern>{country}/{random}</identifierPattern>
+        <rdfs:comment xml:lang="en">The quantity of a resource extracted in a given time period. Measurement units vary across commodity.</rdfs:comment>
     </owl:Class>
     
 
@@ -976,14 +1024,32 @@ Sources:
         <rdfs:label xml:lang="en">Project</rdfs:label>
         <rdfs:subClassOf>
             <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasLocation"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Location"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasCommodity"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Commodity"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
                 <owl:onProperty rdf:resource="http://resourceprojects.org/def/source"/>
                 <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasLocation"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Country"/>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/state"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Status"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasStake"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Stake"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
@@ -995,13 +1061,13 @@ Sources:
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasLocation"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Location"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Country"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/state"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Status"/>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/reserves"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Reserve"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
@@ -1010,21 +1076,16 @@ Sources:
                 <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Site"/>
             </owl:Restriction>
         </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasStake"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Stake"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasCommodity"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Commodity"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
         <captureProvenance rdf:datatype="&xsd;boolean">true</captureProvenance>
         <identifierPattern>{country}/{eyekey}-{suffix}</identifierPattern>
-        <rdfs:comment xml:lang="en">Resource projects represent the physical, tangible presence of extractive operations in a country. </rdfs:comment>
+        <rdfs:comment xml:lang="en">Resource projects represent the basic organizing unit for extractive operations in a country. 
+
+Governments, companies and citizens all report a vast amount of information on a project by project basis. ResourceProjects.org refers to the EU Accounting Directive definition as our core means for defining a project. The EU definition will be applied by all EU countries and has already been used in voluntary company disclosures and mandatory  disclosures by companies based in Norway. It is also mirrored in the [draft] Extractive Sector Transparency Measures Act (ESTMA) technical reporting specifications in Canada. 
+
+Some data sources may, however, define projects differently than the EU Accounting Directive and ESTMA. When this occurs, ResourceProjects.org does not attempt to impose an authoritative project definition or name. Instead, wherever possible, we link projects as defined under the Accounting Directive and ESTMA with other aliases by which they may be known in the public domain or in other data sources. By documenting different sources of how and how often projects are being referred to, ResourceProjects.org aims to build a comprehensive list of projects across the globe while also mapping out inconsistencies in project attribution. 
+
+The EU Accounting Directive (Directive 2013/34/EU, art 41(4)) defines projects like this:” &apos;project&apos; means the operational activities that are governed by a single contract, license, lease, concession or similar legal agreements and form the basis for payment liabilities with a government. None the less, if multiple such agreements are substantially interconnected, this shall be considered a project;“  (...) &quot;Substantially interconnected legal agreements should be understood as a set of operationally and geographically integrated contracts, licenses, leases or concessions or related agreements with substantially similar terms that are signed with a government, giving rise to payment liabilities.&quot;
+</rdfs:comment>
     </owl:Class>
     
 
@@ -1034,6 +1095,26 @@ Sources:
     <owl:Class rdf:about="http://resourceprojects.org/def/ReportLineItem">
         <captureProvenance rdf:datatype="&xsd;boolean">true</captureProvenance>
         <identifierPattern>{random}</identifierPattern>
+    </owl:Class>
+    
+
+
+    <!-- http://resourceprojects.org/def/Reserve -->
+
+    <owl:Class rdf:about="http://resourceprojects.org/def/Reserve">
+        <rdfs:label xml:lang="en">Reserves</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://resourceprojects.org/def/Statistics"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/source"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <captureProvenance rdf:datatype="&xsd;boolean">true</captureProvenance>
+        <identifierPattern>{country}/{random}</identifierPattern>
+        <rdfs:comment xml:lang="en">The subset of total resources that is currently commercially viable to extract.
+
+Definitions used around the world still differ somewhat but there is increasing standardisation. Oil reserves are further divided into the sub-categories: proven reserves (1P), probable reserves (2P) and possible reserves (3P). Mineral reserves are subdivided into probable and proved reserves. Measurement units vary across commodity.</rdfs:comment>
     </owl:Class>
     
 
@@ -1063,23 +1144,27 @@ Sources:
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasLocation"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Location"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Country"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasLocation"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Country"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Location"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <captureProvenance rdf:datatype="&xsd;boolean">true</captureProvenance>
         <rdfs:comment xml:lang="en">There are a number of different kinds of sites. At present our data model does not distinguish these directly, and information about them will need to be inferred by looking at the nature of the projects attached to them.
 
-Block / License Area / Concession Area: Designated geographic areas over which resource extraction rights are granted. Multiple projects can coexist within a block / license area/ concession area, or a project can occupy multiple areas.
+Concession Area / License Area  / Block : Designated geographic areas over which resource exploration and/or extraction rights are granted.The naming convention for areas designated for exploration and production varies across countries and between the petroleum and mining sectors.In practice a project is often associated with a single concession area / license area / block. Within  ResourceProjects.org one or more concession area / license area / block can be linked to a project.
 
-Oil field: An area of land or seabed yielding oil, especially in amounts that justify commercial exploitation (Wikipedia). When oil fields are discovered, they are often given a name, sometimes following the name on the well with which the discovery was made. Oil projects may aim to recover oil from one or multiple connected fields.
 
-Mine site: Places or areas from which commercial minerals are or were removed by excavation from the Earth (USGS). A project would typically include one or multiple closely linked mine sites. </rdfs:comment>
+Oil or gas field: An area of land or seabed with a hydrocarbons reservoir or multiple geologically related reservoirs beneath, especially in amounts that justify commercial exploitation. When oil or gas fields are discovered, they are often given a name, sometimes following the name on the well with which the discovery was made. Oil and gas projects may aim to recover oil and/or gas from one or multiple connected fields.
+
+Mine site: Places or areas from which commercial minerals are or were removed by excavation. A project would typically include one or multiple closely linked mine sites. 
+
+ResourceProjects.org records point coordinates (in lat-long format) identifying where the project is located. The extraction activities of a typical resource project are centered around an oil / gas field (and associated wells) or a mining site. Note that a single project may span across multiple oil fields or mining sites. For example the location of additional infrastructure that is referred to as part of the project but not directly related to extraction, such as processing plants, refineries, etc. can be recorded as separate sites with different locations.
+</rdfs:comment>
         <identifierPattern>{country}/{eyekey}-{suffix}</identifierPattern>
     </owl:Class>
     
@@ -1114,12 +1199,6 @@ Mine site: Places or areas from which commercial minerals are or were removed by
     <owl:Class rdf:about="http://resourceprojects.org/def/Stake">
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/source"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
                 <owl:onProperty rdf:resource="http://resourceprojects.org/def/isStakeIn"/>
                 <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Project"/>
             </owl:Restriction>
@@ -1128,6 +1207,12 @@ Mine site: Places or areas from which commercial minerals are or were removed by
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasStakeholder"/>
                 <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Organization"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/source"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
@@ -1170,8 +1255,21 @@ A stake may relate to a company, project, license or contract. </rdfs:comment>
 
     <owl:Class rdf:about="http://resourceprojects.org/def/Status">
         <captureProvenance rdf:datatype="&xsd;boolean">false</captureProvenance>
-        <rdfs:comment xml:lang="en">A project can be in a number of states. Reports tell us the state of a project at a particular point in time, but often do not provide detailed information about when it entered or exited that state. </rdfs:comment>
         <identifierPattern>{random}</identifierPattern>
+        <rdfs:comment xml:lang="en">ResourceProjects.org categorises project status according to the following general categories (based on EITI guidance):
+
+* Exploration: This stage includes early stage (mapping, sampling, seismic exploration) as well as late stage exploration involving project appraisal after discovery.
+
+* Construction/development: Phase following discovery and the decision to go-ahead with the project, usually based on commerciality. During this phase the  mine site or oil field is readied for production. This will include development / construction plans, and planning/constructing supporting infrastructure. Ends as production starts.
+
+* Production: The project is in production and an output for export or processing is available. Where existing operations are being expanded, these can still be listed as production stage.
+
+* On hold: Activity has been suspended for any number of reasons; technical, labor, environmental or political reasons, lack of funds etc. However, activity is expected to resume once the underlying factor has changed.
+
+* Inactive: All production activity has come to an end. Projects that are under care and maintenance can be listed here.
+
+* Unknown
+</rdfs:comment>
     </owl:Class>
     
 
@@ -1181,14 +1279,14 @@ A stake may relate to a company, project, license or contract. </rdfs:comment>
     <owl:Class rdf:about="http://resourceprojects.org/def/Transaction">
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/paymentType"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/PaymentType"/>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/source"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://resourceprojects.org/def/source"/>
-                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/paymentType"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/PaymentType"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <captureProvenance rdf:datatype="&xsd;boolean">true</captureProvenance>
