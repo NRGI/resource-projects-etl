@@ -688,6 +688,12 @@ unknown -</rdfs:comment>
                 <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Source"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://resourceprojects.org/def/hasLocation"/>
+                <owl:someValuesFrom rdf:resource="http://resourceprojects.org/def/Country"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
         <captureProvenance rdf:datatype="&xsd;boolean">true</captureProvenance>
         <identifierPattern>{random}</identifierPattern>
         <rdfs:comment xml:lang="en">Company is used to represent any kind of organization that can enter into transactions around a resource project, license, contract or site, with the exception of government parties, which are represented by GovernmentParty. 
