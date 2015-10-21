@@ -10,6 +10,9 @@ import json
 import urllib.parse
 
 
+NOCONVERT = ('.rdf', '.ttl')
+
+
 def fetch(dataset):
     dataset.supplied_data.download()
 
@@ -19,6 +22,8 @@ def convert(dataset):
         main_source = None
     else:
         main_source = dataset.supplied_data.original_file.file.name
+        if main_source.endswith(NOCONVERT):
+            return
 
     tl = TagLifter(
         ontology="ontology/resource-projects-ontology.rdf",
@@ -43,7 +48,10 @@ def convert(dataset):
 
 
 def put_to_virtuoso(dataset, staging):
-    ttl_filename = os.path.join(dataset.supplied_data.upload_dir(), 'output.ttl')
+    if dataset.supplied_data.original_file.file.name.endswith(NOCONVERT):
+        ttl_filename = dataset.supplied_data.original_file.file.name
+    else:
+        ttl_filename = os.path.join(dataset.supplied_data.upload_dir(), 'output.ttl')
     prefix = 'staging.' if staging else ''
     graphuri = 'http://{}resourceprojects.org/{}'.format(prefix, dataset.name)
 
