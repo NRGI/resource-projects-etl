@@ -222,7 +222,10 @@ class TagLifter:
             pattern = pattern.replace("{suffix}",''.join(random.choice('0123456789abcdefghijklmnopqrstuvwxyz') for i in range(6)))
     
         if "{cleanstring}" in pattern:
-            pattern = pattern.replace("{cleanstring}",self.clean_string(row[path]).strip())
+            if len(row[path].strip()) > 0:
+                pattern = pattern.replace("{cleanstring}",self.clean_string(row[path]).strip())
+            else:
+                pattern = pattern.replace("{cleanstring}",random_string())
             
         identifier = pattern
 
