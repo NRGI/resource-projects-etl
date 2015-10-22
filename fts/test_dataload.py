@@ -45,14 +45,28 @@ def test_googledoc_input(browser, google_doc_dataset):
 
 @pytest.mark.parametrize('process_id,other_process_id', [ ('staging', 'live'), ('live', 'staging') ])
 def test_push(browser, google_doc_dataset, process_id, other_process_id):
+    default_graph_uri_param = {
+        'live': '&default-graph-uri=http%3A%2F%2Fresourceprojects.org%2Fdata%2F',
+        'staging': '&default-graph-uri=http%3A%2F%2Fstaging.resourceprojects.org%2Fdata%2F'
+    }
+    # Click the load button
     browser.find_element_by_css_selector("button.btn.btn-default.{}".format(process_id)).click()
-    # Check if it's in
+    # Check that it's in staging/live depending on which we pushed to, but not
+    # the other.
     url = os.environ.get('SPARQL_ENDPOINT', 'http://localhost:8890/sparql') + '?default-graph-uri=&query=select+%3Fs+WHERE+%7B+%3Fs+a+%3Chttp%3A%2F%2Fresourceprojects.org%2Fdef%2FProject%3E+%7D&format=application%2Fsparql-results%2Bjson&timeout=0&debug=on'
     assert 'resourceprojects.org' in requests.get(url, headers={'Host': process_id}).text
+    assert 'resourceprojects.org' in requests.get(url+default_graph_uri_param[process_id]).text
     if other_process_id != 'staging':
+        # I think this if statement shouldn't be necessary but the virtuoso
+        # staging endpoint doesn't beahave the way it should so we use
+        # default-graph-uri instead.
+        # see https://github.com/NRGI/resource-projects-etl/issues/48
         assert 'resourceprojects.org' not in requests.get(url, headers={'Host': other_process_id}).text
+    assert 'resourceprojects.org' not in requests.get(url+default_graph_uri_param[other_process_id]).text
+    # Click the remove button and check it's removed
     browser.find_element_by_css_selector("button.btn.btn-default.rm_{}".format(process_id)).click()
     assert 'resourceprojects.org' not in requests.get(url, headers={'Host': process_id}).text
+    assert 'resourceprojects.org' not in requests.get(url+default_graph_uri_param[process_id]).text
 
 
 def test_humanize_naturaltime(browser):
