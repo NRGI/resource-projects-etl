@@ -50,9 +50,9 @@ docker run -p 127.0.0.1:8890:8890 --volumes-from virtuoso-data --name virtuoso o
 # ETL
 docker run -p 127.0.0.1:8001:80 --link virtuoso:virtuoso -e "DBA_PASS=dba" --volumes-from etl-data opendataservices/resource-projects-etl:live
 # Frontend (Live)
-docker run  -p 127.0.0.1:8080:80 --link virtuoso:virtuoso-live -e BASE_URL=http://resourceprojects.org/  -e SPARQL_ENDPOINT=http://virtuoso-live:8890/sparql opendataservices/resourceprojects.org-frontend:live
+docker run  -p 127.0.0.1:8080:80 --link virtuoso:virtuoso-live -e BASE_URL=http://resourceprojects.org/  -e SPARQL_ENDPOINT=http://virtuoso-live:8890/sparql -e DEFAULT_GRAPH_URI=http://resourceprojects.org/data/ opendataservices/resourceprojects.org-frontend:live
 # Frontend (Staging)
-docker run -p 127.0.0.1:8081:80 --link virtuoso:virtuoso-staging -e BASE_URL=http://staging.resourceprojects.org/  -e SPARQL_ENDPOINT=http://virtuoso-staging:8890/sparql opendataservices/resourceprojects.org-frontend:live
+docker run -p 127.0.0.1:8081:80 --link virtuoso:virtuoso-staging -e BASE_URL=http://staging.resourceprojects.org/  -e SPARQL_ENDPOINT=http://virtuoso-staging:8890/sparql -e DEFAULT_GRAPH_URI=http://staging.resourceprojects.org/data/ opendataservices/resourceprojects.org-frontend:live
 
 # Perform initial virtuoso setup
 cat virtuoso_setup.sql |  docker run --link virtuoso:virtuoso -i --rm opendataservices/virtuoso:live isql virtuoso
