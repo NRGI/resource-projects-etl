@@ -127,6 +127,7 @@ PROCESSES = OrderedDict([
         'name': 'Pushed to staging',
         'action_name': 'Push to staging',
         'more_info_name': 'View on staging',
+        'more_info_link': lambda x: os.environ.get('FRONTEND_STAGING_URL', ''),
         'depends': 'convert',
         'function': partial(put_to_virtuoso, staging=True),
         'reverse_id': 'rm_staging',
@@ -137,6 +138,7 @@ PROCESSES = OrderedDict([
         'action_name': 'Push to live',
         'depends': 'fetch',
         'more_info_name': 'View on live',
+        'more_info_link': lambda x: os.environ.get('FRONTEND_LIVE_URL', ''),
         'function': partial(put_to_virtuoso, staging=False),
         'reverse_id': 'rm_live',
         'main': True
