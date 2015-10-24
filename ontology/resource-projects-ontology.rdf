@@ -599,6 +599,7 @@ unknown -</rdfs:comment>
     <!-- http://resourceprojects.org/def/url -->
 
     <owl:DatatypeProperty rdf:about="http://resourceprojects.org/def/url">
+        <rdfs:domain rdf:resource="http://resourceprojects.org/def/Contract"/>
         <rdfs:domain rdf:resource="http://resourceprojects.org/def/Source"/>
     </owl:DatatypeProperty>
     
