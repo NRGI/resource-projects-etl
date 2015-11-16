@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+  </head>
+  <script>
+    function closeSideBar() {
+       google.script.host.close();
+    }
+ </script>
+  <body>
+   <p>
+    Search results for <strong><?= data.search ?></strong>
+   </p>
+   <p>
+    <table>
+        <tr>
+           <th>Select</th><th>Explore</th>
+        </tr>
+     <? for (var i = 0; i < data.results.length; i++) { ?>
+        <tr>
+            <td><input type="button" onClick="google.script.run.withSuccessHandler(closeSideBar).updateCell(<?=data.row?>,<?=data.col?>,'<?=data.results[i].s.value?>');" value="Select"/></td>
+            <td><A href="<?=data.results[i].s.value.replace("http://","http://alpha.")?>" target="_blank"><?=data.results[i].label.value?></a></td>
+        </tr>
+        <tr>
+            <td colspan="2"><?=data.results[i].countryName.value?></td>
+        </tr>
+      <? } ?>
+   </table>
+  </p>
+  </body>
+</html>
