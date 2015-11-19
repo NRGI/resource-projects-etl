@@ -67,6 +67,14 @@ You should update the virtuoso admin password - through the virutoso HTTP user i
 To get more recent builds than live, replace `:live` with `:master` in the above.
 
 
+### Performing database migrations
+
+Run this against the etl container (you will need to replace `etl` with the name of your conatiner):
+
+```
+docker exec etl manage.py migrate 
+```
+
 
 ### Backup data
 
