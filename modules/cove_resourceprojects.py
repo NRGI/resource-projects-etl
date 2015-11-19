@@ -7,6 +7,7 @@ from functools import partial
 import subprocess
 import os
 import json
+import shutil
 import urllib.parse
 
 
@@ -113,6 +114,28 @@ def outputted_ttl(dataset):
      return dataset.supplied_data.upload_url() + 'output.ttl'
    
 
+def delete(dataset):
+    # Don't allow deletion if the datsets still loaded on live or staging
+    for process_id in ['staging', 'live']:
+        process = PROCESSES[process_id]
+        last_run = dataset.processrun_set.filter(process=process_id).order_by('-datetime').first()
+
+        # If the reverse of the process has been run more recently, undo it
+        if last_run and 'reverse_id' in process:
+            reverse_last_run = dataset.processrun_set.filter(process=process['reverse_id'], successful=True).order_by('-datetime').first()
+            if reverse_last_run and last_run.datetime < reverse_last_run.datetime:
+                last_run = None
+
+        if last_run:
+            raise Exception('Can not delete until it\'s removed from live and staging.')
+
+    # Delete the files
+    shutil.rmtree(dataset.supplied_data.upload_dir())
+    # Mark the dataset as deleted in the database
+    # (We keep the object around so we could pull out logs later).
+    dataset.deleted = True
+    dataset.save()
+
 
 PROCESSES = OrderedDict([
     ('fetch', {
@@ -120,6 +143,7 @@ PROCESSES = OrderedDict([
         'action_name': 'Fetch',
         'depends': None,
         'function': fetch,
+        'reverse_id': 'delete',
         'main': True,
     }),
     ('convert', {
@@ -163,6 +187,13 @@ PROCESSES = OrderedDict([
         'action_name': 'Remove from live',
         'depends': 'live',
         'function': partial(delete_from_virtuoso, staging=False),
+        'main': False
+    }),
+    ('delete', {
+        'name': 'Deleted',
+        'action_name': 'Delete',
+        'depends': 'live',
+        'function': delete,
         'main': False
     }),
 ])
