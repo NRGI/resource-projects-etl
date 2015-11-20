@@ -48,17 +48,20 @@ docker create --name etl-data -v /usr/src/resource-projects-etl/db -v /usr/src/r
 # Virtuoso
 docker run -p 127.0.0.1:8890:8890 --volumes-from virtuoso-data --name virtuoso opendataservices/virtuoso:live
 # ETL
-docker run -p 127.0.0.1:8001:80 --link virtuoso:virtuoso -e "DBA_PASS=dba" --volumes-from etl-data opendataservices/resource-projects-etl:live
+docker run -p 127.0.0.1:8001:80 --link virtuoso:virtuoso -e "DBA_PASS=dba" -e FRONTEND_LIVE_URL=http://resourceprojects.org/ -e FRONTEND_STAGING_URL=http://staging.resourceprojects.org/ --volumes-from etl-data opendataservices/resource-projects-etl:live
 # Frontend (Live)
 docker run  -p 127.0.0.1:8080:80 --link virtuoso:virtuoso-live -e BASE_URL=http://resourceprojects.org/  -e SPARQL_ENDPOINT=http://virtuoso-live:8890/sparql -e DEFAULT_GRAPH_URI=http://resourceprojects.org/data/ opendataservices/resourceprojects.org-frontend:live
 # Frontend (Staging)
 docker run -p 127.0.0.1:8081:80 --link virtuoso:virtuoso-staging -e BASE_URL=http://staging.resourceprojects.org/  -e SPARQL_ENDPOINT=http://virtuoso-staging:8890/sparql -e DEFAULT_GRAPH_URI=http://staging.resourceprojects.org/data/ opendataservices/resourceprojects.org-frontend:live
 
 # Perform initial virtuoso setup
+# (this needs running from the directory containing `virtuoso_setup.sql`)
 cat virtuoso_setup.sql |  docker run --link virtuoso:virtuoso -i --rm opendataservices/virtuoso:live isql virtuoso
 ```
 
-If BASE_URL does not match the URL the sites are exposed at, site navigation won't work correctly. On the other hand, SPARQL_ENDPOINT can be left exactly as it is here - these urls are wired up inside the docker container by --link, and must contain "live" and "staging" respectively for Virtuoso to provide the correct data.
+If `BASE_URL` does not match the URL the sites are exposed at, site navigation won't work correctly. Similarly for the etl container, `FRONTEND_LIVE_URL` and `FRONTEND_DEV_URL` should be relevant deployed urls.
+
+On the other hand, `SPARQL_ENDPOINT`, `DEFAULT_GRAPH_URI` and the contents of `virtuoso_setup.sql`, should be left exactly as they are here. (`SPARQL_ENDPOINT` relates to urls that are wired up inside the docker container by --link, whereas `DEFAULT_GRAPH_URI` and the contents of `virtuoso_setup.sql` are virtuoso's internal URI's, and don't relate to the URL the site is actually accessible at).
 
 The above commands expose on 8890, 8801, 8080 and 8081 on localhost. Edit these to match what you want, or place a reverse proxy in front of them.
 
