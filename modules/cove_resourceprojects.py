@@ -194,6 +194,7 @@ PROCESSES = OrderedDict([
         'action_name': 'Delete',
         'depends': 'live',
         'function': delete,
+        'delete': True, # Hackish way to special case this in the template
         'main': False
     }),
 ])
