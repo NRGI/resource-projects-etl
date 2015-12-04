@@ -135,3 +135,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ```
+
+Note that some parts of the ETL tooling depend on
+[CoVE](https://github.com/OpenDataServices/cove), which is licensed under the
+AGPLv3, so must be used in accordance with that license.
