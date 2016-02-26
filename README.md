@@ -18,7 +18,31 @@ Folders may contain:
 
 The output of each process should be written to the root data/ folder, from where it can be loaded onto the ResourceProjects.org platform.
 
-## Running ETL Dashboard with with docker
+## Running ETL Dashboard (without docker)
+The project acts as an extension module for https://github.com/OpenDataServices/cove. First clone and test that project before using this one.
+
+Then, assuming you have a common folder for the two git clones (i.e. this repo can be found at ../resource-projects-etl relative to cove), perform these steps from within the cove folder:
+
+```
+cp ../resource-projects-etl/requirements_taglifter.txt ./
+pip install -r requirements_taglifter.txt 
+cp ../resource-projects-etl/requirements.txt ./
+pip install -r requirements.txt 
+cp -R ../resource-projects-etl/modules ./
+cp -R ../resource-projects-etl/setup.py ./
+python setup.py install
+mkdir db
+export DB_NAME=./db.sqlite
+export DJANGO_SETTINGS_MODULE=settings
+python manage.py migrate --noinput
+python manage.py compilemessages
+python manage.py collectstatic --noinput
+cp -R ../resource-projects-etl/ontology ./ontology
+gunicorn cove.wsgi -b 0.0.0.0:8000 --timeout 600 -w 3 -k eventlet
+```
+
+
+## Running ETL Dashboard with docker
 
 ### Running from docker hub
 
